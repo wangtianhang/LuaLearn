@@ -17,6 +17,9 @@ static int NewVector3(lua_State *L)
 	size_t size = sizeof(struct Vector3);
 	struct Vector3 *pVector3;
 	pVector3 = (struct Vector3 *)lua_newuserdata(L, size);
+	pVector3->x = 0;
+	pVector3->y = 0;
+	pVector3->z = 0;
 	return 1;
 }
 

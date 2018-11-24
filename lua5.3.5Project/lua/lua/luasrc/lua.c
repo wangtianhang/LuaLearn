@@ -612,7 +612,10 @@ static int pmain (lua_State *L) {
 
 const char * luaProgram = 
 " \
-print('hello'); \
+print('hello') \
+test = vector3.New() \
+vector3.SetX(test, 100) \
+print('x ' .. vector3.GetX(test)) \
 ";
 
 int main(int argc, char **argv)
