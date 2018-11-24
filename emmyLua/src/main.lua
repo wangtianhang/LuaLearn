@@ -1,1 +1,1 @@
-print('gaga')
+dofile('./sortExample.lua')
