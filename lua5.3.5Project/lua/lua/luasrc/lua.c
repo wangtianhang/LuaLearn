@@ -20,7 +20,6 @@
 #include "lualib.h"
 
 
-
 #if !defined(LUA_PROMPT)
 #define LUA_PROMPT		"> "
 #define LUA_PROMPT2		">> "
@@ -612,10 +611,12 @@ static int pmain (lua_State *L) {
 
 const char * luaProgram = 
 " \
-print('hello') \
-test = vector3.New() \
-vector3.SetX(test, 100) \
-print('x ' .. vector3.GetX(test)) \
+print('hello') \n \
+test = vector3.New()\n \
+vector3.SetX(test, 100) \n \
+--vector3.gaga(test, gaga) \n \
+vector3.SetX(io.stdin, 200) \n \
+print('x ' .. vector3.GetX(test)) \n \
 ";
 
 int main(int argc, char **argv)
@@ -624,7 +625,10 @@ int main(int argc, char **argv)
 	
 	lua_State * L = luaL_newstate();
 	luaL_openlibs(L);
-	luaL_dostring(L, luaProgram);
+	//luaL_dostring(L, luaProgram);
+	luaL_loadstring(L, luaProgram);
+	int status = lua_pcall(L, 0, 0, 0);
+	report(L, status);
 
 	printf("\nlua≤‚ ‘∫Ø ˝÷¥––ÕÍ±œ\n");
 	getchar();
