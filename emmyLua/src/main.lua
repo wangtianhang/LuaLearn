@@ -1,1 +1,1 @@
-dofile('./sortExample.lua')
+dofile('./sortAndSearchExample.lua')
