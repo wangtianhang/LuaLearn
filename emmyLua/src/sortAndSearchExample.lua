@@ -28,18 +28,26 @@ for key,value in pairs(dataSet) do
     print(key, value.key, value.value)
 end
 
+function DataIsLess(c, d)
+    return c.key < d.key
+end
+
+function DataIsEqual(a, target)
+    return a.key == target.key
+end
+
 local serach = {};
-function serach.BinarySearch(dataList, targetData)
+function serach.BinarySearch(dataList, lessFunc, equalFunc, target)
 
     local left = 1;
     local right = #dataList
     while left ~= right do
 
         local mid = math.ceil((left + right) / 2)
-        print('mid ' .. mid .. ' left ' .. left .. ' right ' .. right)
-        if dataList[mid].key == targetData then
+        --print('mid ' .. mid .. ' left ' .. left .. ' right ' .. right)
+        if equalFunc(dataList[mid], target) then
             return mid;
-        elseif dataList[mid].key < targetData then
+        elseif lessFunc(dataList[mid], target) then
             left = mid + 1
         else
             right = mid - 1;
@@ -57,9 +65,9 @@ print(dataSet[1].key)
 print(dataSet[2].key)
 print(dataSet[3].key)
 
-local index = serach.BinarySearch(dataSet, 2);
+local index = serach.BinarySearch(dataSet, DataIsLess, DataIsEqual, { key = 2} );
 print('find 2 ', index, dataSet[index].key, dataSet[index].value)
-index = serach.BinarySearch(dataSet, 4);
+index = serach.BinarySearch(dataSet, DataIsLess, DataIsEqual, { key = 4});
 local data = dataSet[index]
 if(data ~= nil) then
     print('find 4 ', index, dataSet[index].key, dataSet[index].value)
