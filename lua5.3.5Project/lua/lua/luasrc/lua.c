@@ -613,10 +613,9 @@ const char * luaProgram =
 " \
 print('hello') \n \
 test = vector3.New()\n \
-vector3.SetX(test, 100) \n \
---vector3.gaga(test, gaga) \n \
-vector3.SetX(io.stdin, 200) \n \
-print('x ' .. vector3.GetX(test)) \n \
+test:SetX(100) \n \
+--test:SetX(io.stdin, 200) \n \
+print('x ' .. test:GetX()) \n \
 ";
 
 int main(int argc, char **argv)

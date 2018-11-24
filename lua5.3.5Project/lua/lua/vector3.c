@@ -51,14 +51,24 @@ static int SetX(lua_State *L)
 static const luaL_Reg vector3Lib[] =
 {
 	{ "New", NewVector3 },
+	{NULL, NULL}
+};
+
+static const luaL_Reg vector3_meta[] = 
+{
 	{ "GetX", GetX },
 	{ "SetX", SetX },
-	{NULL, NULL}
+	{ NULL, NULL }
 };
 
 LUAMOD_API int luaopen_vector3(lua_State *L)
 {
 	luaL_newmetatable(L, "vector3_meta_table");
+
+	lua_pushvalue(L, -1);
+	lua_setfield(L, -2, "__index");
+	luaL_setfuncs(L, vector3_meta, 0);
+
 	luaL_newlib(L, vector3Lib);
 	return 1;
 }
