@@ -44,6 +44,9 @@ LUAMOD_API int (luaopen_math) (lua_State *L);
 #define LUA_DBLIBNAME	"debug"
 LUAMOD_API int (luaopen_debug) (lua_State *L);
 
+#define LUA_VECTOR3LIBNAME "vector3"
+LUAMOD_API int(luaopen_vector3)(lua_State *L);
+
 #define LUA_LOADLIBNAME	"package"
 LUAMOD_API int (luaopen_package) (lua_State *L);
 
