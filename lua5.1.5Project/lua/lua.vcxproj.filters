@@ -16,6 +16,9 @@
     <Filter Include="源文件\luasrc">
       <UniqueIdentifier>{6f73b627-00a6-4c86-8a6a-e057de773a5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\tolua">
+      <UniqueIdentifier>{e2d231ad-7da0-409e-aa6b-1138a5c77006}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="luasrc\loadlib.c">
@@ -111,6 +114,24 @@
     <ClCompile Include="luasrc\lmem.c">
       <Filter>源文件\luasrc</Filter>
     </ClCompile>
+    <ClCompile Include="tolua\bit.c">
+      <Filter>源文件\tolua</Filter>
+    </ClCompile>
+    <ClCompile Include="tolua\int64.c">
+      <Filter>源文件\tolua</Filter>
+    </ClCompile>
+    <ClCompile Include="tolua\lpeg.c">
+      <Filter>源文件\tolua</Filter>
+    </ClCompile>
+    <ClCompile Include="tolua\struct.c">
+      <Filter>源文件\tolua</Filter>
+    </ClCompile>
+    <ClCompile Include="tolua\tolua.c">
+      <Filter>源文件\tolua</Filter>
+    </ClCompile>
+    <ClCompile Include="tolua\uint64.c">
+      <Filter>源文件\tolua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="luasrc\lobject.h">
@@ -181,6 +202,12 @@
     </ClInclude>
     <ClInclude Include="luasrc\lmem.h">
       <Filter>源文件\luasrc</Filter>
+    </ClInclude>
+    <ClInclude Include="tolua\lpeg.h">
+      <Filter>源文件\tolua</Filter>
+    </ClInclude>
+    <ClInclude Include="tolua\tolua.h">
+      <Filter>源文件\tolua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

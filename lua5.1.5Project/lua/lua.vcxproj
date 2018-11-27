@@ -42,6 +42,12 @@
     <ClCompile Include="luasrc\lvm.c" />
     <ClCompile Include="luasrc\lzio.c" />
     <ClCompile Include="luasrc\print.c" />
+    <ClCompile Include="tolua\bit.c" />
+    <ClCompile Include="tolua\int64.c" />
+    <ClCompile Include="tolua\lpeg.c" />
+    <ClCompile Include="tolua\struct.c" />
+    <ClCompile Include="tolua\tolua.c" />
+    <ClCompile Include="tolua\uint64.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="luasrc\lapi.h" />
@@ -67,6 +73,8 @@
     <ClInclude Include="luasrc\lundump.h" />
     <ClInclude Include="luasrc\lvm.h" />
     <ClInclude Include="luasrc\lzio.h" />
+    <ClInclude Include="tolua\lpeg.h" />
+    <ClInclude Include="tolua\tolua.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="luasrc\Makefile" />
@@ -99,7 +107,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <IncludePath>F:\gitHub\luaLearn\LuaLearn\lua5.1.5Project\lua\luasrc;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
