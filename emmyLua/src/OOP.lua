@@ -10,7 +10,10 @@ son = {
 setmetatable(son, father) --把son的metatable设置为father
 print(son.house)
 
-MyClass = { test = 1 }
+MyClass = 
+{
+    test = 1 
+}
 MyClass.__index = MyClass
 
 function MyClass:init()
