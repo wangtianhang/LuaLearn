@@ -1,18 +1,23 @@
 print('getterAndSetter.lua')
 
 MyClass = {}
-MyClass.__index = MyClass;
-
-function MyClass.New()
-	local ret = {};
-	setmetatable(ret, MyClass)
-	return ret;
-end
-
+--MyClass.__index = MyClass;
 
 function MyClass:init()
+    print( "MyClass  init ")
     -- We'll store members in an internal table
     self.members = {}
+end
+
+function MyClass:New()
+    
+    --MyClass:init();
+
+	local ret = {};
+	setmetatable(ret, self)
+    ret.__index = self
+    ret:init()
+	return ret;
 end
 
 function MyClass:__newindex( index, value )
@@ -34,7 +39,8 @@ function MyClass:__index( index )
 end
 
 function test()
-    foo = MyClass.New();
+
+    foo = MyClass:New();
 
     foo.testMember = 5
     foo.testMember = 2

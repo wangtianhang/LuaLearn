@@ -1,3 +1,3 @@
-lua.exe .\getterAndSetter.lua
+lua.exe .\OOP.lua
 
 pause
