@@ -109,7 +109,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <IncludePath>F:\gitHub\luaLearn\LuaLearn\lua5.1.5Project\lua\luasrc;$(IncludePath)</IncludePath>
+    <IncludePath>.\luasrc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
