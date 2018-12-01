@@ -23,10 +23,10 @@ else
 end
 
 function exceptionHandle(msg)
-    print("----------------------------------------")
+    print("------------")
     print("LUA ERROR: " .. tostring(msg) .. "\n")
     print(debug.traceback())
-    print("----------------------------------------")
+    print("------------")
 end
 
 if(xpcall(exceptionFunc, exceptionHandle)) then

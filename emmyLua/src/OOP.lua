@@ -1,4 +1,4 @@
-print('OOP.lua')
+print('==========================================OOP.lua')
 
 father = {
 	house=1

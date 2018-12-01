@@ -1,4 +1,4 @@
-print('getterAndSetter.lua')
+print('====================================getterAndSetter.lua')
 
 MyClass = { };
 --MyClass.__index = MyClass;
