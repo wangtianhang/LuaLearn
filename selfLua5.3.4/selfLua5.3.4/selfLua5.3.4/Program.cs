@@ -5,19 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+public class BinaryChunk
+{
+    public Header header;
+    public byte sizeUpvalues;
+    public Prototype mainFunc;
+}
+
 //namespace selfLua5._3._4
 //{
-public class BinaryChunk
+public class Header
 {
     public byte[] signature = new byte[4];
     public byte version;
     public byte format;
     public byte[] luacData = new byte[6];
-    public byte cintSize;
-    public byte sizetSize;
-    public byte instructionSize;
-    public byte luaIntegerSize;
-    public byte luaNumberSize;
+    public byte cintSize  =4;
+    public byte sizetSize = 8;
+    public byte instructionSize = 4;
+    public byte luaIntegerSize = 8;
+    public byte luaNumberSize = 8;
     public Int64 luacInt;
     public double luacNum;
 }
@@ -44,27 +51,63 @@ class Program
     static void ProcessData(byte[] data)
     {
         BinaryChunk chunk = new BinaryChunk();
+
+        Header header = new Header();
         MemoryStream stream = new MemoryStream(data);
         BinaryReader reader = new BinaryReader(stream);
-        for(int i = 0; i < chunk.signature.Length; ++i)
+        for(int i = 0; i < header.signature.Length; ++i)
         {
-            chunk.signature[i] = (byte)stream.ReadByte();
+            header.signature[i] = (byte)stream.ReadByte();
         }
-        chunk.version = (byte)stream.ReadByte();
-        chunk.format = (byte)stream.ReadByte();
-        for(int i = 0; i < chunk.luacData.Length; ++i)
+        header.version = (byte)stream.ReadByte();
+        header.format = (byte)stream.ReadByte();
+        for(int i = 0; i < header.luacData.Length; ++i)
         {
-            chunk.luacData[i] = (byte)stream.ReadByte();
+            header.luacData[i] = (byte)stream.ReadByte();
         }
-        chunk.cintSize = (byte)stream.ReadByte();
-        chunk.sizetSize = (byte)stream.ReadByte();
-        chunk.instructionSize = (byte)stream.ReadByte();
-        chunk.luaIntegerSize = (byte)stream.ReadByte();
-        chunk.luaNumberSize = (byte)stream.ReadByte();
-        chunk.luacInt = reader.ReadInt64();
-        chunk.luacNum = reader.ReadDouble();
+        header.cintSize = (byte)stream.ReadByte();
+        header.sizetSize = (byte)stream.ReadByte();
+        header.instructionSize = (byte)stream.ReadByte();
+        header.luaIntegerSize = (byte)stream.ReadByte();
+        header.luaNumberSize = (byte)stream.ReadByte();
+        header.luacInt = reader.ReadInt64();
+        header.luacNum = reader.ReadDouble();
+        chunk.header = header;
+
+        chunk.sizeUpvalues = reader.ReadByte();
+
+        Prototype main = new Prototype();
+        //byte length = reader.ReadByte();
+        //byte length = reader.ReadByte();
+        //byte length2 = reader.ReadByte();
+        //byte[] bytes = reader.ReadBytes(length2 - 1);
+        main.Source = ReadLuaString(reader);
 
         int test = 0;
+    }
+
+    static string ReadLuaString(BinaryReader reader)
+    {
+        byte size = reader.ReadByte();
+        if (size == 0)
+        {
+            return "";
+        }
+        else if(size <= 253)
+        {
+            byte[] bytes = reader.ReadBytes(size - 1);
+            return System.Text.Encoding.Default.GetString(bytes);
+        }
+        else if(size >= 253)
+        {
+            Int64 size2 = reader.ReadInt64();
+            byte[] bytes = reader.ReadBytes((int)size2 - 1);
+            return System.Text.Encoding.Default.GetString(bytes);
+        }
+        else
+        {
+            throw new Exception("读取luastring失败");
+        }
     }
 
     static void Main(string[] args)
