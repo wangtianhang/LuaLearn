@@ -274,5 +274,10 @@ class ProcessLuaData
     {
         return reader.ReadDouble();
     }
+
+    public static Prototype Undump(BinaryChunk chunk)
+    {
+        return chunk.mainFunc;
+    }
 }
 
