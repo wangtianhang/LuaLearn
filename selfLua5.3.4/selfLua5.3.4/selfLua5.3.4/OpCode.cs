@@ -21,6 +21,47 @@ public enum OpArgMask
     OpArgK // argument is a constant or register/constant
 }
 
+public class Instruction
+{
+    public static int MAXARG_Bx = (1 << 18) - 1;   // 262143
+    public static int MAXARG_sBx = MAXARG_Bx >> 1; // 131071
+
+    public static OpCode getOpCode(int i)
+    {
+        return OpCode.GetValue(i & 0x3F);
+    }
+
+    public static int getA(int i)
+    {
+        return (i >> 6) & 0xFF;
+    }
+
+    public static int getC(int i)
+    {
+        return (i >> 14) & 0x1FF;
+    }
+
+    public static int getB(int i)
+    {
+        return (i >> 23) & 0x1FF;
+    }
+
+    public static int getBx(int i)
+    {
+        return MathHelper.UIntMoveRight(i, 14);
+    }
+
+    public static int getSBx(int i)
+    {
+        return getBx(i) - MAXARG_sBx;
+    }
+
+    public static int getAx(int i)
+    {
+        return MathHelper.UIntMoveRight(i, 6);
+    }
+}
+
 public struct OpCode
 {
     /*       T  A    B       C     mode */
@@ -71,6 +112,73 @@ public struct OpCode
     static OpCode CLOSURE = new OpCode(0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABx); // R(A) := closure(KPROTO[Bx])
     static OpCode VARARG = new OpCode(0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC); // R(A), R(A+1), ..., R(A+B-2) = vararg
     static OpCode EXTRAARG = new OpCode(0, 0, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iAx); // extra (larger) argument for previous opcode
+
+    static bool s_Init = false;
+    static List<OpCode> s_opCodeList = new List<OpCode>();
+
+    static void Init()
+    {
+        if(s_Init)
+        {
+            return;
+        }
+        s_Init = true;
+
+        s_opCodeList.Add(MOVE);
+        s_opCodeList.Add(LOADK);
+         s_opCodeList.Add(LOADKX);
+        s_opCodeList.Add(LOADBOOL);
+        s_opCodeList.Add(LOADNIL);
+        s_opCodeList.Add(GETUPVAL);
+        s_opCodeList.Add(GETTABUP);
+        s_opCodeList.Add(GETTABLE);
+        s_opCodeList.Add(SETTABUP);
+        s_opCodeList.Add(SETUPVAL);
+        s_opCodeList.Add(SETTABLE);
+        s_opCodeList.Add(NEWTABLE);
+        s_opCodeList.Add(SELF);
+        s_opCodeList.Add(ADD);
+        s_opCodeList.Add(SUB);
+        s_opCodeList.Add(MUL);
+        s_opCodeList.Add(MOD);
+        s_opCodeList.Add(POW);
+        s_opCodeList.Add(DIV);
+        s_opCodeList.Add(IDIV);
+        s_opCodeList.Add(BAND);
+        s_opCodeList.Add(BOR);
+        s_opCodeList.Add(BXOR);
+        s_opCodeList.Add(SHL);
+        s_opCodeList.Add(SHR);
+        s_opCodeList.Add(UNM);
+        s_opCodeList.Add(BNOT);
+        s_opCodeList.Add(NOT);
+        s_opCodeList.Add(LEN);
+        s_opCodeList.Add(CONCAT);
+        s_opCodeList.Add(JMP);
+        s_opCodeList.Add(EQ);
+        s_opCodeList.Add(LT);
+        s_opCodeList.Add(LE);
+        s_opCodeList.Add(TEST);
+        s_opCodeList.Add(TESTSET);
+        s_opCodeList.Add(CALL);
+        s_opCodeList.Add(TAILCALL);
+        s_opCodeList.Add(RETURN);
+        s_opCodeList.Add(FORLOOP);
+        s_opCodeList.Add(FORPREP);
+        s_opCodeList.Add(TFORCALL);
+        s_opCodeList.Add(TFORLOOP);
+        s_opCodeList.Add(SETLIST);
+        s_opCodeList.Add(CLOSURE);
+        s_opCodeList.Add(VARARG);
+        s_opCodeList.Add(EXTRAARG);
+    }
+
+    public static OpCode GetValue(int i)
+    {
+        Init();
+
+        return s_opCodeList[i];
+    }
 
     int testFlag; // operator is a test (next instruction must be a jump)
     int setAFlag; // instruction set register A
