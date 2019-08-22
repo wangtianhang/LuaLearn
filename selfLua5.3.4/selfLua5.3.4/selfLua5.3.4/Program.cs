@@ -16,7 +16,7 @@ class Program
         byte[] data = File.ReadAllBytes(@"E:\gitHub\luaLearn\LuaLearn\originLua5.3.4\originLua5.3.4\Debug\luac.out");
         BinaryChunk chunk = ProcessLuaData.ProcessData(data);
 
-        Console.WriteLine("test");
+        Console.WriteLine("selflua end");
         Console.ReadLine();
     }
 }

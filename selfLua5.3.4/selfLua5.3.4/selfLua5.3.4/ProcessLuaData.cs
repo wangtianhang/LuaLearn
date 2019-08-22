@@ -39,15 +39,38 @@ public class Prototype
     public byte MaxStackSize;
     public UInt32[] Code;
     // constants;
+    public System.Object[] Constants;
     // upvalue;
+    public Upvalue[] upvalues;
     public Prototype[] Protos;
     public UInt32[] LineInfo;
     // LocVar
+    public LocVar[] LocVars;
     public string[] UpvalueNames;
+}
+
+public class LocVar
+{
+    public string varName;
+    public int startPC;
+    public int endPC;
+}
+
+public class Upvalue
+{
+    public byte instack;
+    public byte idx;
 }
 
 class ProcessLuaData
 {
+    private const int TAG_NIL = 0x00;
+    private const int TAG_BOOLEAN = 0x01;
+    private const int TAG_NUMBER = 0x03;
+    private const int TAG_INTEGER = 0x13;
+    private const int TAG_SHORT_STR = 0x04;
+    private const int TAG_LONG_STR = 0x14;
+
     public static BinaryChunk ProcessData(byte[] data)
     {
         BinaryChunk chunk = new BinaryChunk();
@@ -83,6 +106,80 @@ class ProcessLuaData
         return chunk;
     }
 
+    static Upvalue ReadUpvalue(BinaryReader reader)
+    {
+        Upvalue ret = new Upvalue();
+        ret.instack = reader.ReadByte();
+        ret.idx = reader.ReadByte();
+        return ret;
+    }
+
+    static Upvalue[] ReadUpvalues(BinaryReader reader)
+    {
+        List<Upvalue> upvalueList = new List<Upvalue>();
+        UInt32 size = reader.ReadUInt32();
+        for (int i = 0; i < size; ++i)
+        {
+            upvalueList.Add(ReadUpvalue(reader));
+        }
+        return upvalueList.ToArray();
+    }
+
+    static UInt32[] ReadLineInfo(BinaryReader reader)
+    {
+        List<UInt32> lineInfoList = new List<uint>();
+        UInt32 size = reader.ReadUInt32();
+        for (int i = 0; i < size; ++i)
+        {
+            lineInfoList.Add(reader.ReadUInt32());
+        }
+        return lineInfoList.ToArray();
+    }
+
+    static UInt32[] ReadCode(BinaryReader reader)
+    {
+        List<UInt32> opList = new List<uint>();
+        UInt32 size = reader.ReadUInt32();
+        for(int i = 0; i < size; ++i)
+        {
+            opList.Add(reader.ReadUInt32());
+        }
+        return opList.ToArray();
+    }
+
+    static Object ReadConstant(BinaryReader reader)
+    {
+        int type = reader.ReadByte();
+        switch(type)
+        {
+            case TAG_NIL:
+                return null;
+            case TAG_BOOLEAN:
+                return reader.ReadByte() != 0;
+            case TAG_INTEGER:
+                return ReadLuaInteger(reader);
+            case TAG_NUMBER:
+                return ReadLuaNumber(reader);
+            case TAG_SHORT_STR:
+                return ReadLuaString(reader);
+            case TAG_LONG_STR:
+                return ReadLuaString(reader);
+            default:
+                throw new Exception("不支持的constant类型");
+        }
+    }
+
+    static Object[] ReadConstants(BinaryReader reader)
+    {
+        List<Object> objList = new List<object>();
+        UInt32 size = reader.ReadUInt32();
+        for(int i = 0; i < size; ++i)
+        {
+            objList.Add(ReadConstant(reader));
+        }
+        return objList.ToArray();
+    }
+
     static Prototype ReadProtoType(BinaryReader reader)
     {
         Prototype protoType = new Prototype();
@@ -91,8 +188,57 @@ class ProcessLuaData
         //byte length2 = reader.ReadByte();
         //byte[] bytes = reader.ReadBytes(length2 - 1);
         protoType.Source = ReadLuaString(reader);
+        protoType.LineDefined = reader.ReadUInt32();
+        protoType.LastLineDefined = reader.ReadUInt32();
+        protoType.NumParams = reader.ReadByte();
+        protoType.IsVararg = reader.ReadByte();
+        protoType.MaxStackSize = reader.ReadByte();
+        protoType.Code = ReadCode(reader);
+        protoType.Constants = ReadConstants(reader);
+        protoType.upvalues = ReadUpvalues(reader);
+        UInt32 protoSize = reader.ReadUInt32();
+        List<Prototype> protoList = new List<Prototype>();
+        for(int i = 0; i < protoSize; ++i)
+        {
+            protoList.Add(ReadProtoType(reader));
+        }
+        protoType.Protos = protoList.ToArray();
+        protoType.LineInfo = ReadLineInfo(reader);
+        protoType.LocVars = ReadLocVars(reader);
+        protoType.UpvalueNames = ReadUpvalueNames(reader);
 
         return protoType;
+    }
+
+    static LocVar ReadLocVar(BinaryReader reader)
+    {
+        LocVar ret = new LocVar();
+        ret.varName = ReadLuaString(reader);
+        ret.startPC = reader.ReadInt32();
+        ret.endPC = reader.ReadInt32();
+        return ret;
+    }
+
+    static LocVar[] ReadLocVars(BinaryReader reader)
+    {
+        List<LocVar> locVarList = new List<LocVar>();
+        UInt32 size = reader.ReadUInt32();
+        for(int i = 0; i < size; ++i)
+        {
+            locVarList.Add(ReadLocVar(reader));
+        }
+        return locVarList.ToArray();
+    }
+
+    static string[] ReadUpvalueNames(BinaryReader reader)
+    {
+        List<string> upvalueNameList = new List<string>();
+        UInt32 size = reader.ReadUInt32();
+        for (int i = 0; i < size; ++i)
+        {
+            upvalueNameList.Add(ReadLuaString(reader));
+        }
+        return upvalueNameList.ToArray();
     }
 
     static string ReadLuaString(BinaryReader reader)
@@ -117,6 +263,16 @@ class ProcessLuaData
         {
             throw new Exception("读取luastring失败");
         }
+    }
+
+    static UInt64 ReadLuaInteger(BinaryReader reader)
+    {
+        return reader.ReadUInt64();
+    }
+
+    static double ReadLuaNumber(BinaryReader reader)
+    {
+        return reader.ReadDouble();
     }
 }
 
