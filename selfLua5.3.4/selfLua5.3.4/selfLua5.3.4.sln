@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "selfLua5.3.4", "selfLua5.3.4\selfLua5.3.4.csproj", "{15703C24-6719-44B2-9E46-BFB644A9B00F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{15703C24-6719-44B2-9E46-BFB644A9B00F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15703C24-6719-44B2-9E46-BFB644A9B00F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15703C24-6719-44B2-9E46-BFB644A9B00F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15703C24-6719-44B2-9E46-BFB644A9B00F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BE850C19-3532-4D65-B531-7132EDCFDB19}
+	EndGlobalSection
+EndGlobal
