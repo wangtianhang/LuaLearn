@@ -180,12 +180,12 @@ public struct OpCode
         return s_opCodeList[i];
     }
 
-    int testFlag; // operator is a test (next instruction must be a jump)
-    int setAFlag; // instruction set register A
-    OpArgMask argBMode; // B arg mode
-    OpArgMask argCMode; // C arg mode
-    OpMode opMode; // op mode
-    string name;
+    public int testFlag; // operator is a test (next instruction must be a jump)
+    public int setAFlag; // instruction set register A
+    public OpArgMask argBMode; // B arg mode
+    public OpArgMask argCMode; // C arg mode
+    public OpMode opMode; // op mode
+    public string name;
 
     OpCode(string name, int testFlag, int setAFlag,
        OpArgMask argBMode, OpArgMask argCMode, OpMode opMode)

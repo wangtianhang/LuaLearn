@@ -42,7 +42,51 @@ class PrintPrototype
         for (int i = 0; i < code.Length; i++)
         {
             String line = lineInfo.Length > 0 ? lineInfo[i].ToString() : "-";
-            Console.Write("\t{0}\t[{1}]\t0x{2:X8}\n", i + 1, line, code[i]);
+            Console.Write("\t{0}\t[{1}]\t{2}\t", i + 1, line, Instruction.getOpCode((int)code[i]).name);
+            printOperands((int)code[i]);
+            Console.WriteLine();
+        }
+    }
+
+    private static void printOperands(int i)
+    {
+        OpCode opCode = Instruction.getOpCode(i);
+        int a = Instruction.getA(i);
+        switch (opCode.opMode)
+        {
+            case OpMode.iABC:
+                Console.Write("{0}", a);
+                if (opCode.argBMode != OpArgMask.OpArgN)
+                {
+                    int b = Instruction.getB(i);
+                    Console.Write(" {0}", b > 0xFF ? -1 - (b & 0xFF) : b);
+                }
+                if (opCode.argCMode != OpArgMask.OpArgN)
+                {
+                    int c = Instruction.getC(i);
+                    Console.Write(" {0}", c > 0xFF ? -1 - (c & 0xFF) : c);
+                }
+                break;
+            case OpMode.iABx:
+                Console.Write("{0}", a);
+                int bx = Instruction.getBx(i);
+                if (opCode.argBMode == OpArgMask.OpArgK)
+                {
+                    Console.Write(" {0}", -1 - bx);
+                }
+                else if (opCode.argBMode == OpArgMask.OpArgU)
+                {
+                    Console.Write(" {0}", bx);
+                }
+                break;
+            case OpMode.iAsBx:
+                int sbx = Instruction.getSBx(i);
+                Console.Write("{0} {1}", a, sbx);
+                break;
+            case OpMode.iAx:
+                int ax = Instruction.getAx(i);
+                Console.Write("{0}", -1 - ax);
+                break;
         }
     }
 
