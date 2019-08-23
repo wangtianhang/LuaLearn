@@ -5,12 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-public class BinaryChunk
-{
-    public Header header;
-    public byte sizeUpvalues;
-    public Prototype mainFunc;
-}
+
 
 //namespace selfLua5._3._4
 //{
@@ -29,38 +24,8 @@ public class Header
     public double luacNum;
 }
 
-public class Prototype
-{
-    public string Source;
-    public UInt32 LineDefined;
-    public UInt32 LastLineDefined;
-    public byte NumParams;
-    public byte IsVararg;
-    public byte MaxStackSize;
-    public UInt32[] Code;
-    // constants;
-    public System.Object[] Constants;
-    // upvalue;
-    public Upvalue[] upvalues;
-    public Prototype[] Protos;
-    public UInt32[] LineInfo;
-    // LocVar
-    public LocVar[] LocVars;
-    public string[] UpvalueNames;
-}
 
-public class LocVar
-{
-    public string varName;
-    public int startPC;
-    public int endPC;
-}
 
-public class Upvalue
-{
-    public byte instack;
-    public byte idx;
-}
 
 class ProcessLuaData
 {
