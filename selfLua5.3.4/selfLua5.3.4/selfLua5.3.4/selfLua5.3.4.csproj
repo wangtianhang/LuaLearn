@@ -51,6 +51,8 @@
     <Compile Include="binchunk\Upvalue.cs" />
     <Compile Include="number\LuaMath.cs" />
     <Compile Include="number\LuaNumber.cs" />
+    <Compile Include="state\Arithmetic.cs" />
+    <Compile Include="state\Comparison.cs" />
     <Compile Include="state\LuaStack.cs" />
     <Compile Include="api\LuaState.cs" />
     <Compile Include="state\LuaStateImpl.cs" />

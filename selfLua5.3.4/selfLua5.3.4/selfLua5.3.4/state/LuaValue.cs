@@ -47,4 +47,29 @@ class LuaValue
         }
     }
 
+    public static bool toInteger(Object val, ref long ret)
+    {
+        if(val is long)
+        {
+            ret = (long)val;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static bool toFloat(Object val, ref double ret)
+    {
+        if (val is double)
+        {
+            ret = (double)val;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
