@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LuaStack.cs" />
+    <Compile Include="LuaState.cs" />
+    <Compile Include="LuaType.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="PrintPrototype.cs" />
     <Compile Include="ProcessLuaData.cs" />
