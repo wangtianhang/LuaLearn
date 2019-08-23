@@ -49,6 +49,7 @@
     <Compile Include="LuaType.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="PrintPrototype.cs" />
+    <Compile Include="PrintStackData.cs" />
     <Compile Include="ProcessLuaData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
