@@ -34,9 +34,9 @@ public interface LuaState
     bool isFunction(int idx);
     bool toBoolean(int idx);
     long toInteger(int idx);
-    long toIntegerX(int idx);
+    bool toIntegerX(int idx, ref long ret);
     double toNumber(int idx);
-    Double toNumberX(int idx);
+    bool toNumberX(int idx, ref double ret);
     String toString(int idx);
     /* push functions (Go -> stack); */
     void pushNil();

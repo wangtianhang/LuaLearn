@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="LuaStack.cs" />
     <Compile Include="LuaState.cs" />
+    <Compile Include="LuaStateImpl.cs" />
     <Compile Include="LuaType.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="PrintPrototype.cs" />

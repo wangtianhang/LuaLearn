@@ -101,7 +101,7 @@ class ProcessLuaData
 
         chunk.mainFunc = ReadProtoType(reader);
 
-        int test = 0;
+        //int test = 0;
 
         return chunk;
     }
