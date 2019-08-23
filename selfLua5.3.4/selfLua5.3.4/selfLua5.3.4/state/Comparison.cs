@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 class Comparison
 {
 
-    static bool eq(Object a, Object b)
+    public static bool eq(Object a, Object b)
     {
         if (a == null)
         {
@@ -26,7 +26,7 @@ class Comparison
         }
     }
 
-    static bool lt(Object a, Object b)
+    public static bool lt(Object a, Object b)
     {
         if (a is String && b is String) {
             return ((String)a).CompareTo((String)b) < 0;
@@ -48,7 +48,7 @@ class Comparison
         throw new System.Exception("comparison error!");
     }
 
-    static bool le(Object a, Object b)
+    public static bool le(Object a, Object b)
     {
         if (a is String && b is String) {
             return ((String)a).CompareTo((String)b) <= 0;

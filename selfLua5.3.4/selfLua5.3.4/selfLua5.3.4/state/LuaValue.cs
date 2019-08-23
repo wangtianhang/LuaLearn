@@ -49,10 +49,24 @@ class LuaValue
 
     public static bool toInteger(Object val, ref long ret)
     {
-        if(val is long)
+        if (val is long)
         {
             ret = (long)val;
             return true;
+        }
+        else if (val is Double)
+        {
+            double n = (Double)val;
+            if(LuaNumber.isInteger(n))
+            {
+                ret = (long)n;
+                return true;
+            }
+            return false;
+        }
+        else if (val is String)
+        {
+            return toInteger((String)val, ref ret);
         }
         else
         {
@@ -62,14 +76,49 @@ class LuaValue
 
     public static bool toFloat(Object val, ref double ret)
     {
-        if (val is double)
+        if (val is Double)
         {
-            ret = (double)val;
+            ret = (Double)val;
             return true;
+        }
+        else if (val is long)
+        {
+            ret = (double)((long)val);
+            return true;
+        }
+        else if (val is String)
+        {
+            return LuaNumber.parseFloat((String)val, ref ret);
         }
         else
         {
             return false;
         }
+    }
+
+    private static bool toInteger(String s, ref long ret)
+    {
+        //long i = 0;
+        if(LuaNumber.parseInteger(s, ref ret))
+        {
+            return true;
+        }
+        //         if (i != null)
+        //         {
+        //             return i;
+        //         }
+        //Double f = LuaNumber.parseFloat(s);
+        double f = 0;
+        if(LuaNumber.parseFloat(s, ref f)
+            && LuaNumber.isInteger(f))
+        {
+            ret = (long)f;
+            return true;
+        }
+//         if (f != null && LuaNumber.isInteger(f))
+//         {
+//             return f.longValue();
+//         }
+        return false;
     }
 }

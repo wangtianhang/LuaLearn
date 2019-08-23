@@ -312,4 +312,79 @@ public class LuaStateImpl : LuaState
         stack.push(s);
     }
 
+    /* comparison and arithmetic functions */
+
+
+    public void arith(ArithOp op)
+    {
+        Object b = stack.pop();
+        Object a = op != ArithOp.LUA_OPUNM && op != ArithOp.LUA_OPBNOT ? stack.pop() : b;
+        Object result = Arithmetic.arith(a, b, op);
+        if (result != null)
+        {
+            stack.push(result);
+        }
+        else
+        {
+            throw new System.Exception("arithmetic error!");
+        }
+    }
+
+
+    public bool compare(int idx1, int idx2, CmpOp op)
+    {
+        if (!stack.isValid(idx1) || !stack.isValid(idx2))
+        {
+            return false;
+        }
+
+        Object a = stack.get(idx1);
+        Object b = stack.get(idx2);
+        switch (op)
+        {
+            case CmpOp.LUA_OPEQ: return Comparison.eq(a, b);
+            case CmpOp.LUA_OPLT: return Comparison.lt(a, b);
+            case CmpOp.LUA_OPLE: return Comparison.le(a, b);
+            default: throw new System.Exception("invalid compare op!");
+        }
+    }
+
+    /* miscellaneous functions */
+
+
+    public void len(int idx)
+    {
+        Object val = stack.get(idx);
+        if (val is String) {
+            pushInteger(((String)val).Length);
+        } else {
+            throw new System.Exception("length error!");
+        }
+    }
+
+
+    public void concat(int n)
+    {
+        if (n == 0)
+        {
+            stack.push("");
+        }
+        else if (n >= 2)
+        {
+            for (int i = 1; i < n; i++)
+            {
+                if (isString(-1) && isString(-2))
+                {
+                    String s2 = toString(-1);
+                    String s1 = toString(-2);
+                    pop(2);
+                    pushString(s1 + s2);
+                    continue;
+                }
+
+                throw new System.Exception("concatenation error!");
+            }
+        }
+        // n == 1, do nothing
+    }
 }

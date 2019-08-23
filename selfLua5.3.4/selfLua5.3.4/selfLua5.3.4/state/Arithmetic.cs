@@ -87,7 +87,7 @@ class Arithmetic
         s_doubleOpList.Add(null);
     }
 
-    static Object arith(Object a, Object b, ArithOp op)
+    public static Object arith(Object a, Object b, ArithOp op)
     {
         Init();
 
