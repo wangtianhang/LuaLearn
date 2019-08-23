@@ -4,12 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class LuaStateImpl : LuaState
+public class LuaStateImpl : LuaState, LuaVM
 {
 
     private LuaStack stack = new LuaStack();
-
+    Prototype proto;
+    private int pc;
     /* basic stack manipulation */
+
+    public LuaStateImpl(Prototype proto)
+    {
+        this.proto = proto;
+    }
+
+    public LuaStateImpl()
+    {
+        proto = null;
+    }
 
 
     public int getTop()
@@ -386,5 +397,39 @@ public class LuaStateImpl : LuaState
             }
         }
         // n == 1, do nothing
+    }
+
+    /* LuaVM */
+
+    public int getPC()
+    {
+        return pc;
+    }
+
+    public void addPC(int n)
+    {
+        pc += n;
+    }
+
+    public int fetch()
+    {
+        return (int)proto.Code[pc++];
+    }
+
+    public void getConst(int idx)
+    {
+        stack.push(proto.Constants[idx]);
+    }
+
+    public void getRK(int rk)
+    {
+        if (rk > 0xFF)
+        { // constant
+            getConst(rk & 0xFF);
+        }
+        else
+        { // register
+            pushValue(rk + 1);
+        }
     }
 }
