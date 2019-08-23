@@ -55,6 +55,36 @@ class Arithmetic
             return;
         }
         s_hasInit = true;
+
+        s_longOpList.Add((a, b) => a + b);
+        s_longOpList.Add((a, b) => a - b);
+        s_longOpList.Add((a, b) => a * b);
+        s_longOpList.Add((a, b) => MathHelper.floorMod(a, b));
+        s_longOpList.Add(null);
+        s_longOpList.Add(null);
+        s_longOpList.Add((a, b) => MathHelper.floorDiv(a, b));
+        s_longOpList.Add((a, b) => a & b);
+        s_longOpList.Add((a, b) => a | b);
+        s_longOpList.Add((a, b) => a ^ b);
+        s_longOpList.Add((a, b) => LuaMath.shiftLeft(a, (int)b));
+        s_longOpList.Add((a, b) => LuaMath.shiftRight(a, (int)b));
+        s_longOpList.Add((a, b) => -a);
+        s_longOpList.Add((a, b) => ~a);
+
+        s_doubleOpList.Add((a, b) => a + b);
+        s_doubleOpList.Add((a, b) => a - b);
+        s_doubleOpList.Add((a, b) => a * b);
+        s_doubleOpList.Add((a, b) => LuaMath.floorMod(a, b));
+        s_doubleOpList.Add((a, b) => Math.Pow(a, b));
+        s_doubleOpList.Add((a, b) => a / b);
+        s_doubleOpList.Add((a, b) => LuaMath.floorDiv(a, b));
+        s_doubleOpList.Add(null);
+        s_doubleOpList.Add(null);
+        s_doubleOpList.Add(null);
+        s_doubleOpList.Add(null);
+        s_doubleOpList.Add(null);
+        s_doubleOpList.Add((a, b)=> - a);
+        s_doubleOpList.Add(null);
     }
 
     static Object arith(Object a, Object b, ArithOp op)

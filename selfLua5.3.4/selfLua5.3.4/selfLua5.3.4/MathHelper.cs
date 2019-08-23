@@ -34,5 +34,22 @@ class MathHelper
         }
         return x;
     }
+
+    public static long floorDiv(long x, long y)
+    {
+        long r = x / y;
+        // if the signs are different and modulo not zero, round down
+        if ((x ^ y) < 0 && (r * y != x))
+        {
+            r--;
+        }
+        return r;
+    }
+
+    public static long floorMod(long x, long y)
+    {
+        long r = x - floorDiv(x, y) * y;
+        return r;
+    }
 }
 
