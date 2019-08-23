@@ -43,10 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="api\ArithOp.cs" />
+    <Compile Include="api\CmpOp.cs" />
     <Compile Include="binchunk\BinaryChunk.cs" />
     <Compile Include="binchunk\LocVar.cs" />
     <Compile Include="binchunk\Prototype.cs" />
     <Compile Include="binchunk\Upvalue.cs" />
+    <Compile Include="number\LuaMath.cs" />
+    <Compile Include="number\LuaNumber.cs" />
     <Compile Include="state\LuaStack.cs" />
     <Compile Include="api\LuaState.cs" />
     <Compile Include="state\LuaStateImpl.cs" />

@@ -23,5 +23,16 @@ class MathHelper
         }
         return x;
     }
+
+    public static long ULongMoveRight(long x, int y)
+    {
+        long mask = long.MaxValue; //Integer.MAX_VALUE
+        for (int i = 0; i < y; i++)
+        {
+            x >>= 1;
+            x &= mask;
+        }
+        return x;
+    }
 }
 
