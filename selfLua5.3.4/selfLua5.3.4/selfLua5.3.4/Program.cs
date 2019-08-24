@@ -27,7 +27,9 @@ class Program
 
         //TestChapter08();
 
-        TestChapter09();
+        //TestChapter09();
+
+        TestChapter10();
 
         Console.WriteLine("selflua end");
         Console.ReadLine();
@@ -144,6 +146,15 @@ class Program
     static void TestChapter09()
     {
         byte[] data = File.ReadAllBytes(@".\hello_world.luac.out");
+        LuaState ls = new LuaStateImpl();
+        ls.register("print", print);
+        ls.load(data, "gaga", "b");
+        ls.call(0, 0);
+    }
+
+    static void TestChapter10()
+    {
+        byte[] data = File.ReadAllBytes(@".\closure_test.luac.out");
         LuaState ls = new LuaStateImpl();
         ls.register("print", print);
         ls.load(data, "gaga", "b");
