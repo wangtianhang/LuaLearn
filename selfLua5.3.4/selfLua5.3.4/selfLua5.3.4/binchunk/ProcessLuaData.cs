@@ -230,9 +230,9 @@ class ProcessLuaData
         }
     }
 
-    static UInt64 ReadLuaInteger(BinaryReader reader)
+    static long ReadLuaInteger(BinaryReader reader)
     {
-        return reader.ReadUInt64();
+        return reader.ReadInt64();
     }
 
     static double ReadLuaNumber(BinaryReader reader)

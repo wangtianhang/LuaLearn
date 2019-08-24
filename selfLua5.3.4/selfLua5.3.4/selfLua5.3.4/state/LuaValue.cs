@@ -9,6 +9,12 @@ class LuaValue
 
     public static LuaType typeOf(Object val)
     {
+        Type type = null;
+        if (val != null)
+        {
+            type = val.GetType();
+        }
+
         if (val == null)
         {
             return LuaType.LUA_TNIL;
@@ -17,7 +23,7 @@ class LuaValue
         {
             return LuaType.LUA_TBOOLEAN;
         }
-        else if (val is long || val is Double)
+        else if (val is long || val is UInt64 || val is Double)
         {
             return LuaType.LUA_TNUMBER;
         }

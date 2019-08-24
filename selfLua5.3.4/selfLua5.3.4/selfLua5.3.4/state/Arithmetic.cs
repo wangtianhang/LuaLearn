@@ -87,12 +87,36 @@ class Arithmetic
         s_doubleOpList.Add(null);
     }
 
+    public static long ToLong(Object tmp)
+    {
+        if(tmp is long)
+        {
+            return (long)tmp;
+        }
+        if(tmp is ulong)
+        {
+            return (long)((ulong)tmp);
+        }
+        throw new Exception("no support type");
+    }
+
     public static Object arith(Object a, Object b, ArithOp op)
     {
         Init();
 
         LongOp integerFunc = s_longOpList[(int)op];
         DoubleOp floatFunc = s_doubleOpList[(int)op];
+
+        Type atype = null;
+        Type bType = null;
+        if(a != null)
+        {
+            atype = a.GetType();
+        }
+        if(b != null)
+        {
+            bType = b.GetType();
+        }
 
         if (floatFunc == null)
         { // bitwise
@@ -110,8 +134,10 @@ class Arithmetic
         { // arith
             if (integerFunc != null)
             { // add,sub,mul,mod,idiv,unm
-                if (a is long && b is long) {
-                    return integerFunc((long)a, (long)b);
+                if ((a is long || a is ulong) 
+                    && (b is long || b is ulong))
+                {
+                    return integerFunc(ToLong(a), ToLong(b));
                 }
             }
             Double x = 0;

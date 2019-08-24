@@ -16,6 +16,10 @@ class LuaStack
 
     public void push(Object val)
     {
+        if(val is UInt64)
+        {
+            int test = 0;
+        }
         if (slots.Count > 10000)
         { // TODO
             throw new System.Exception("lua 堆栈 过大");

@@ -15,11 +15,11 @@ class Program
     {
         //OpCode opCode = OpCode.GetValue(0);
 
-        TestChapter2And3();
+        //TestChapter2And3();
 
-        TestChaper4();
+        //TestChaper4();
 
-        TestChapter5();
+        //TestChapter5();
 
         TestChapter6();
 
