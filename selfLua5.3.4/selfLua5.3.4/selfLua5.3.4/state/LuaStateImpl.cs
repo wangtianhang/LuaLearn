@@ -533,7 +533,14 @@ public class LuaStateImpl : LuaState, LuaVM
     public ThreadStatus load(byte[] chunk, String chunkName, String mode)
     {
         Prototype proto = ProcessLuaData.Undump(chunk); // todo
-        stack.push(new Closure(proto));
+        //stack.push(new Closure(proto));
+        Closure closure = new Closure(proto);
+        stack.push(closure);
+        if (proto.getUpvalues().length > 0)
+        {
+            Object env = registry.get(LUA_RIDX_GLOBALS);
+            closure.upvals[0] = new UpvalueHolder(env); // todo
+        }
         return ThreadStatus.LUA_OK;
     }
 
@@ -654,7 +661,51 @@ public class LuaStateImpl : LuaState, LuaVM
     public void loadProto(int idx)
     {
         Prototype proto = stack.closure.proto.Protos[idx];
-        stack.push(new Closure(proto));
+        //stack.push(new Closure(proto));
+        Closure closure = new Closure(proto);
+        stack.push(closure);
+
+        for (int i = 0; i < proto.getUpvalues().length; i++)
+        {
+            Upvalue uvInfo = proto.getUpvalues()[i];
+            int uvIdx = uvInfo.getIdx();
+            if (uvInfo.getInstack() == 1)
+            {
+                if (stack.openuvs == null)
+                {
+                    stack.openuvs = new HashMap<>();
+                }
+                if (stack.openuvs.containsKey(uvIdx))
+                {
+                    closure.upvals[i] = stack.openuvs.get(uvIdx);
+                }
+                else
+                {
+                    closure.upvals[i] = new UpvalueHolder(stack, uvIdx);
+                    stack.openuvs.put(uvIdx, closure.upvals[i]);
+                }
+            }
+            else
+            {
+                closure.upvals[i] = stack.closure.upvals[uvIdx];
+            }
+        }
+    }
+
+    public void closeUpvalues(int a)
+    {
+        if (stack.openuvs != null)
+        {
+            for (Iterator<UpvalueHolder> it = stack.openuvs.values().iterator(); it.hasNext();)
+            {
+                UpvalueHolder uv = it.next();
+                if (uv.index >= a - 1)
+                {
+                    uv.migrate();
+                    it.remove();
+                }
+            }
+        }
     }
 
     public bool isCSharpFunction(int idx)
@@ -674,7 +725,18 @@ public class LuaStateImpl : LuaState, LuaVM
 
     public void pushCSharpFunction(CSharpFunction f)
     {
-        stack.push(new Closure(f));
+        stack.push(new Closure(f, 0));
+    }
+
+    public void pushJavaClosure(JavaFunction f, int n)
+    {
+        Closure closure = new Closure(f, n);
+        for (int i = n; i > 0; i--)
+        {
+            Object val = stack.pop();
+            closure.upvals[i - 1] = new UpvalueHolder(val); // TODO
+        }
+        stack.push(closure);
     }
 
     public void register(String name, CSharpFunction f)

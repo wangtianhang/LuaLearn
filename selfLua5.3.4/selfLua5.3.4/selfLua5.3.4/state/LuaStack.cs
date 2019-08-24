@@ -15,6 +15,7 @@ class LuaStack
     /* linked list */
     public LuaStack prev;
     public LuaStateImpl state;
+    Map<Integer, UpvalueHolder> openuvs;
 
     public int top()
     {
@@ -74,6 +75,11 @@ class LuaStack
 
     public bool isValid(int idx)
     {
+        if (idx < LUA_REGISTRYINDEX)
+        { /* upvalues */
+            int uvIdx = LUA_REGISTRYINDEX - idx - 1;
+            return closure != null && uvIdx < closure.upvals.length;
+        }
         if (idx == LuaConfig.LUA_REGISTRYINDEX)
         {
             return true;
@@ -84,6 +90,20 @@ class LuaStack
 
     public Object get(int idx)
     {
+        if (idx < LUA_REGISTRYINDEX)
+        { /* upvalues */
+            int uvIdx = LUA_REGISTRYINDEX - idx - 1;
+            if (closure != null
+                    && closure.upvals.length > uvIdx
+                    && closure.upvals[uvIdx] != null)
+            {
+                return closure.upvals[uvIdx].get();
+            }
+            else
+            {
+                return null;
+            }
+        }
         if (idx == LuaConfig.LUA_REGISTRYINDEX)
         {
             return state.registry;
@@ -101,6 +121,17 @@ class LuaStack
 
     public void set(int idx, Object val)
     {
+        if (idx < LUA_REGISTRYINDEX)
+        { /* upvalues */
+            int uvIdx = LUA_REGISTRYINDEX - idx - 1;
+            if (closure != null
+                    && closure.upvals.length > uvIdx
+                    && closure.upvals[uvIdx] != null)
+            {
+                closure.upvals[uvIdx].set(val);
+            }
+            return;
+        }
         if (idx == LuaConfig.LUA_REGISTRYINDEX)
         {
             state.registry = (LuaTable)val;

@@ -25,7 +25,7 @@ class Instructions
         vm.addPC(sBx);
         if (a != 0)
         {
-            throw new System.Exception("todo: jmp!");
+            vm.closeUpvalues(a);
         }
     }
 
@@ -467,17 +467,48 @@ class Instructions
     }
 
     /* upvalues */
+    
+    // R(A) := UpValue[B]
+    public static void getUpval(int i, LuaVM vm)
+    {
+        int a = Instruction.getA(i) + 1;
+        int b = Instruction.getB(i) + 1;
+        vm.copy(luaUpvalueIndex(b), a);
+    }
+
+    // UpValue[B] := R(A)
+    public static void setUpval(int i, LuaVM vm)
+    {
+        int a = Instruction.getA(i) + 1;
+        int b = Instruction.getB(i) + 1;
+        vm.copy(a, luaUpvalueIndex(b));
+    }
 
     // R(A) := UpValue[B][RK(C)]
     public static void getTabUp(int i, LuaVM vm)
     {
         int a = Instruction.getA(i) + 1;
+        int b = Instruction.getB(i) + 1;
         int c = Instruction.getC(i);
-        vm.pushGlobalTable();
         vm.getRK(c);
-        vm.getTable(-2);
+        vm.getTable(luaUpvalueIndex(b));
         vm.replace(a);
-        vm.pop(1);
+    }
+
+    // UpValue[A][RK(B)] := RK(C)
+    public static void setTabUp(int i, LuaVM vm)
+    {
+        int a = Instruction.getA(i) + 1;
+        int b = Instruction.getB(i);
+        int c = Instruction.getC(i);
+        vm.getRK(b);
+        vm.getRK(c);
+        vm.setTable(luaUpvalueIndex(a));
+    }
+
+    private static int luaUpvalueIndex(int i)
+    {
+        return LUA_REGISTRYINDEX - i;
     }
 }
 

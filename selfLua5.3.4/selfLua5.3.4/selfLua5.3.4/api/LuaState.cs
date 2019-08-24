@@ -72,6 +72,7 @@ public interface LuaState
     CSharpFunction toCSharpFunction(int idx);
     void pushCSharpFunction(CSharpFunction f);
     void register(String name, CSharpFunction f);
+    void pushCSharpClosure(CSharpFunction f, int n);
 
     void pushGlobalTable();
     LuaType getGlobal(String name);
