@@ -508,7 +508,7 @@ class Instructions
 
     private static int luaUpvalueIndex(int i)
     {
-        return LUA_REGISTRYINDEX - i;
+        return LuaConfig.LUA_REGISTRYINDEX - i;
     }
 }
 

@@ -536,9 +536,9 @@ public class LuaStateImpl : LuaState, LuaVM
         //stack.push(new Closure(proto));
         Closure closure = new Closure(proto);
         stack.push(closure);
-        if (proto.getUpvalues().length > 0)
+        if (proto.upvalues.Length > 0)
         {
-            Object env = registry.get(LUA_RIDX_GLOBALS);
+            Object env = registry.get(LuaConfig.LUA_RIDX_GLOBALS);
             closure.upvals[0] = new UpvalueHolder(env); // todo
         }
         return ThreadStatus.LUA_OK;
@@ -665,24 +665,24 @@ public class LuaStateImpl : LuaState, LuaVM
         Closure closure = new Closure(proto);
         stack.push(closure);
 
-        for (int i = 0; i < proto.getUpvalues().length; i++)
+        for (int i = 0; i < proto.upvalues.Length; i++)
         {
-            Upvalue uvInfo = proto.getUpvalues()[i];
-            int uvIdx = uvInfo.getIdx();
-            if (uvInfo.getInstack() == 1)
+            Upvalue uvInfo = proto.upvalues[i];
+            int uvIdx = uvInfo.idx;
+            if (uvInfo.instack == 1)
             {
                 if (stack.openuvs == null)
                 {
-                    stack.openuvs = new HashMap<>();
+                    stack.openuvs = new Dictionary<int, UpvalueHolder>();
                 }
-                if (stack.openuvs.containsKey(uvIdx))
+                if (stack.openuvs.ContainsKey(uvIdx))
                 {
-                    closure.upvals[i] = stack.openuvs.get(uvIdx);
+                    closure.upvals[i] = stack.openuvs[uvIdx];
                 }
                 else
                 {
                     closure.upvals[i] = new UpvalueHolder(stack, uvIdx);
-                    stack.openuvs.put(uvIdx, closure.upvals[i]);
+                    stack.openuvs.Add(uvIdx, closure.upvals[i]);
                 }
             }
             else
@@ -696,14 +696,27 @@ public class LuaStateImpl : LuaState, LuaVM
     {
         if (stack.openuvs != null)
         {
-            for (Iterator<UpvalueHolder> it = stack.openuvs.values().iterator(); it.hasNext();)
+            //             for (Iterator<UpvalueHolder> it = stack.openuvs.values().iterator(); it.hasNext();)
+            //             {
+            //                 UpvalueHolder uv = it.next();
+            //                 if (uv.index >= a - 1)
+            //                 {
+            //                     uv.migrate();
+            //                     it.remove();
+            //                 }
+            //             }
+            List<int> willRemoveKey = new List<int>();
+            foreach(var iter in stack.openuvs)
             {
-                UpvalueHolder uv = it.next();
-                if (uv.index >= a - 1)
+                if(iter.Value.index >= a - 1)
                 {
-                    uv.migrate();
-                    it.remove();
+                    iter.Value.migrate();
+                    willRemoveKey.Add(iter.Key);
                 }
+            }
+            foreach(var iter in willRemoveKey)
+            {
+                stack.openuvs.Remove(iter);
             }
         }
     }
@@ -728,7 +741,7 @@ public class LuaStateImpl : LuaState, LuaVM
         stack.push(new Closure(f, 0));
     }
 
-    public void pushJavaClosure(JavaFunction f, int n)
+    public void pushCSharpClosure(CSharpFunction f, int n)
     {
         Closure closure = new Closure(f, n);
         for (int i = n; i > 0; i--)

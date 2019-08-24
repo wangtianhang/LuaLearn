@@ -15,7 +15,7 @@ class LuaStack
     /* linked list */
     public LuaStack prev;
     public LuaStateImpl state;
-    Map<Integer, UpvalueHolder> openuvs;
+    public Dictionary<int, UpvalueHolder> openuvs;
 
     public int top()
     {
@@ -75,10 +75,10 @@ class LuaStack
 
     public bool isValid(int idx)
     {
-        if (idx < LUA_REGISTRYINDEX)
+        if (idx < LuaConfig.LUA_REGISTRYINDEX)
         { /* upvalues */
-            int uvIdx = LUA_REGISTRYINDEX - idx - 1;
-            return closure != null && uvIdx < closure.upvals.length;
+            int uvIdx = LuaConfig.LUA_REGISTRYINDEX - idx - 1;
+            return closure != null && uvIdx < closure.upvals.Length;
         }
         if (idx == LuaConfig.LUA_REGISTRYINDEX)
         {
@@ -90,11 +90,11 @@ class LuaStack
 
     public Object get(int idx)
     {
-        if (idx < LUA_REGISTRYINDEX)
+        if (idx < LuaConfig.LUA_REGISTRYINDEX)
         { /* upvalues */
-            int uvIdx = LUA_REGISTRYINDEX - idx - 1;
+            int uvIdx = LuaConfig.LUA_REGISTRYINDEX - idx - 1;
             if (closure != null
-                    && closure.upvals.length > uvIdx
+                    && closure.upvals.Length > uvIdx
                     && closure.upvals[uvIdx] != null)
             {
                 return closure.upvals[uvIdx].get();
@@ -121,11 +121,11 @@ class LuaStack
 
     public void set(int idx, Object val)
     {
-        if (idx < LUA_REGISTRYINDEX)
+        if (idx < LuaConfig.LUA_REGISTRYINDEX)
         { /* upvalues */
-            int uvIdx = LUA_REGISTRYINDEX - idx - 1;
+            int uvIdx = LuaConfig.LUA_REGISTRYINDEX - idx - 1;
             if (closure != null
-                    && closure.upvals.length > uvIdx
+                    && closure.upvals.Length > uvIdx
                     && closure.upvals[uvIdx] != null)
             {
                 closure.upvals[uvIdx].set(val);

@@ -10,12 +10,12 @@ class Closure
 
     public Prototype proto;
     public CSharpFunction csharpFunc;
-    UpvalueHolder[] upvals;
+    public UpvalueHolder[] upvals;
 
     public Closure(Prototype proto)
     {
         this.proto = proto;
-        this.upvals = new UpvalueHolder[proto.getUpvalues().length];
+        this.upvals = new UpvalueHolder[proto.upvalues.Length];
     }
 
     public Closure(CSharpFunction csharpFunc, int nUpvals)

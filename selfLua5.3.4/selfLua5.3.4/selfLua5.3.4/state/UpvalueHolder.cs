@@ -7,28 +7,28 @@ using System.Threading.Tasks;
 
 class UpvalueHolder
 {
-    int index;
+    public int index;
     private LuaStack stack;
     private Object value;
 
-    UpvalueHolder(Object value)
+    public UpvalueHolder(Object value)
     {
         this.value = value;
         this.index = 0;
     }
 
-    UpvalueHolder(LuaStack stack, int index)
+    public UpvalueHolder(LuaStack stack, int index)
     {
         this.stack = stack;
         this.index = index;
     }
 
-    Object get()
+    public Object get()
     {
         return stack != null ? stack.get(index + 1) : value;
     }
 
-    void set(Object value)
+    public void set(Object value)
     {
         if (stack != null)
         {
@@ -40,7 +40,7 @@ class UpvalueHolder
         }
     }
 
-    void migrate()
+    public void migrate()
     {
         if (stack != null)
         {
