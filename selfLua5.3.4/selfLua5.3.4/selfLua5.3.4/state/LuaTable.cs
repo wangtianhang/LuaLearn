@@ -22,7 +22,7 @@ public class LuaTable
         }
     }
 
-    int length()
+    public int length()
     {
         return arr == null ? 0 : arr.Count;
     }

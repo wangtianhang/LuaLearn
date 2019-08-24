@@ -368,7 +368,10 @@ public class LuaStateImpl : LuaState, LuaVM
         Object val = stack.get(idx);
         if (val is String) {
             pushInteger(((String)val).Length);
-        } else {
+        }
+        else if (val is LuaTable) {
+            pushInteger(((LuaTable)val).length());
+        }else {
             throw new System.Exception("length error!");
         }
     }

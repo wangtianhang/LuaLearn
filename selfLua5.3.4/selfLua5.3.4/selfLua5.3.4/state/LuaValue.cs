@@ -31,6 +31,10 @@ class LuaValue
         {
             return LuaType.LUA_TSTRING;
         }
+        else if(val is LuaTable)
+        {
+            return LuaType.LUA_TTABLE;
+        }
         else
         {
             throw new System.Exception("TODO");

@@ -21,7 +21,9 @@ class Program
 
         //TestChapter5();
 
-        TestChapter6();
+        //TestChapter6();
+
+        TestChapter7();
 
         Console.WriteLine("selflua end");
         Console.ReadLine();
@@ -89,6 +91,14 @@ class Program
     static void TestChapter6()
     {
         byte[] data = File.ReadAllBytes(@".\sum.luac.out");
+        //byte[] data = File.ReadAllBytes(@"E:\Dev\GitHub_Self\luaLearn\LuaLearn\originLua5.3.4\originLua5.3.4\Debug\luac.out");
+        BinaryChunk chunk = ProcessLuaData.ProcessData(data);
+        LuaMain(chunk.mainFunc);
+    }
+
+    static void TestChapter7()
+    {
+        byte[] data = File.ReadAllBytes(@".\test_table.luac.out");
         //byte[] data = File.ReadAllBytes(@"E:\Dev\GitHub_Self\luaLearn\LuaLearn\originLua5.3.4\originLua5.3.4\Debug\luac.out");
         BinaryChunk chunk = ProcessLuaData.ProcessData(data);
         LuaMain(chunk.mainFunc);

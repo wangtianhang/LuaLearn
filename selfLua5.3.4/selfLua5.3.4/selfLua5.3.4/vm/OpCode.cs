@@ -16,11 +16,11 @@ public struct OpCode
     public static OpCode LOADNIL = new OpCode("LOADNIL", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, Instructions.loadNil); // R(A), R(A+1), ..., R(A+B) := nil
     public static OpCode GETUPVAL = new OpCode("GETUPVAL", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, null); // R(A) := UpValue[B]
     public static OpCode GETTABUP = new OpCode("GETTABUP", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgK, OpMode.iABC, null); // R(A) := UpValue[B][RK(C)]
-    public static OpCode GETTABLE = new OpCode("GETTABLE", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgK, OpMode.iABC, null); // R(A) := R(B)[RK(C)]
+    public static OpCode GETTABLE = new OpCode("GETTABLE", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgK, OpMode.iABC, Instructions.getTable); // R(A) := R(B)[RK(C)]
     public static OpCode SETTABUP = new OpCode("SETTABUP", 0, 0, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC, null); // UpValue[A][RK(B)] := RK(C)
     public static OpCode SETUPVAL = new OpCode("SETUPVAL", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, null); // UpValue[B] := R(A)
-    public static OpCode SETTABLE = new OpCode("SETTABLE", 0, 0, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC, null); // R(A)[RK(B)] := RK(C)
-    public static OpCode NEWTABLE = new OpCode("NEWTABLE", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, null); // R(A) := {} (size = B,C)
+    public static OpCode SETTABLE = new OpCode("SETTABLE", 0, 0, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC, Instructions.setTable); // R(A)[RK(B)] := RK(C)
+    public static OpCode NEWTABLE = new OpCode("NEWTABLE", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, Instructions.newTable); // R(A) := {} (size = B,C)
     public static OpCode SELF = new OpCode("SELF", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgK, OpMode.iABC, null); // R(A+1) := R(B); R(A) := R(B)[RK(C)]
     public static OpCode ADD = new OpCode("ADD", 0, 1, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC, Instructions.add); // R(A) := RK(B) + RK(C)
     public static OpCode SUB = new OpCode("SUB", 0, 1, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC, Instructions.sub); // R(A) := RK(B) - RK(C)
@@ -52,7 +52,7 @@ public struct OpCode
     public static OpCode FORPREP = new OpCode("FORPREP", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx, Instructions.forPrep); // R(A)-=R(A+2); pc+=sBx
     public static OpCode TFORCALL = new OpCode("TFORCALL", 0, 0, OpArgMask.OpArgN, OpArgMask.OpArgU, OpMode.iABC, null); // R(A+3), ... ,R(A+2+C) := R(A)(R(A+1), R(A+2));
     public static OpCode TFORLOOP = new OpCode("TFORLOOP", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx, null); // if R(A+1) ~= nil then { R(A)=R(A+1); pc += sBx }
-    public static OpCode SETLIST = new OpCode("SETLIST", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, null); // R(A)[(C-1)*FPF+i] := R(A+i), 1 <= i <= B
+    public static OpCode SETLIST = new OpCode("SETLIST", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, Instructions.setList); // R(A)[(C-1)*FPF+i] := R(A+i), 1 <= i <= B
     public static OpCode CLOSURE = new OpCode("CLOSURE", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABx, null); // R(A) := closure(KPROTO[Bx])
     public static OpCode VARARG = new OpCode("VARARG", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, null); // R(A), R(A+1), ..., R(A+B-2) = vararg
     public static OpCode EXTRAARG = new OpCode("EXTRAARG", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iAx, null); // extra (larger) argument for previous opcode
