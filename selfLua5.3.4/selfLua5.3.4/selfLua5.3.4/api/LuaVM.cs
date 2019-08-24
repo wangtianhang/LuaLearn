@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-interface LuaVM : LuaState
+public interface LuaVM : LuaState
 {
     int getPC();
     void addPC(int n);
