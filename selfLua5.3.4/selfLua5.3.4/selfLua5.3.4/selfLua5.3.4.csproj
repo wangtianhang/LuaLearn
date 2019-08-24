@@ -67,6 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="vm\Instruction.cs" />
     <Compile Include="vm\Instructions.cs" />
+    <Compile Include="vm\OpAction.cs" />
     <Compile Include="vm\OpArgMask.cs" />
     <Compile Include="vm\OpCode.cs" />
     <Compile Include="vm\OpMode.cs" />
