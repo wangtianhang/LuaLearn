@@ -21,6 +21,8 @@ class Program
 
         TestChapter5();
 
+        TestChapter6();
+
         Console.WriteLine("selflua end");
         Console.ReadLine();
     }
@@ -28,7 +30,7 @@ class Program
     static void TestChapter2And3()
     {
         Console.WriteLine("=============chapter2and3=============");
-        byte[] data = File.ReadAllBytes(@"E:\gitHub\luaLearn\LuaLearn\originLua5.3.4\originLua5.3.4\Debug\luac.out");
+        byte[] data = File.ReadAllBytes(@".\hello_world.luac.out");
         //byte[] data = File.ReadAllBytes(@"E:\Dev\GitHub_Self\luaLearn\LuaLearn\originLua5.3.4\originLua5.3.4\Debug\luac.out");
         BinaryChunk chunk = ProcessLuaData.ProcessData(data);
         PrintPrototype.list(ProcessLuaData.Undump(chunk));
@@ -82,6 +84,11 @@ class Program
         ls.pushBoolean(ls.compare(1, 2, CmpOp.LUA_OPEQ));
         PrintStackData.printStack(ls);
         Console.WriteLine("==========================");
+    }
+
+    static void TestChapter6()
+    {
+
     }
 }
 //}
