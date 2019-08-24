@@ -138,5 +138,40 @@ class Program
         ls.load(data, "gaga", "b");
         ls.call(0, 0);
     }
+
+    static void TestChapter09()
+    {
+        byte[] data = File.ReadAllBytes(@".\chapter08.luac.out");
+        LuaState ls = new LuaStateImpl();
+        ls.register("print", print);
+        ls.load(data, "gaga", "b");
+        ls.call(0, 0);
+    }
+
+    private static int print(LuaState ls)
+    {
+        int nArgs = ls.getTop();
+        for (int i = 1; i <= nArgs; i++)
+        {
+            if (ls.isBoolean(i))
+            {
+                System.out.print(ls.toBoolean(i));
+            }
+            else if (ls.isString(i))
+            {
+                System.out.print(ls.toString(i));
+            }
+            else
+            {
+                System.out.print(ls.typeName(ls.type(i)));
+            }
+            if (i < nArgs)
+            {
+                System.out.print("\t");
+            }
+        }
+        System.out.println();
+        return 0;
+    }
 }
 //}

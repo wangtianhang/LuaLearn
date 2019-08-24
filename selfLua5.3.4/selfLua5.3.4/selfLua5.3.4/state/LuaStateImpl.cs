@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public class LuaStateImpl : LuaState, LuaVM
 {
-
+    LuaTable registry = new LuaTable(0, 0);
     private LuaStack stack = new LuaStack();
     //Prototype proto;
     //private int pc;
@@ -21,6 +21,13 @@ public class LuaStateImpl : LuaState, LuaVM
     //     {
     //         proto = null;
     //     }
+    public LuaStateImpl()
+    {
+        registry.put(LUA_RIDX_GLOBALS, new LuaTable(0, 0));
+        LuaStack stack = new LuaStack();
+        stack.state = this;
+        pushLuaStack(stack);
+    }
 
     private void pushLuaStack(LuaStack newTop)
     {
@@ -535,11 +542,47 @@ public class LuaStateImpl : LuaState, LuaVM
         Object val = stack.get(-(nArgs + 1));
         if (val is Closure) {
             Closure c = (Closure)val;
-            Console.Write("call {0}<{1},{2}>\n", c.proto.Source,
-                    c.proto.LineDefined, c.proto.LastLineDefined);
-            callLuaClosure(nArgs, nResults, c);
+            //             Console.Write("call {0}<{1},{2}>\n", c.proto.Source,
+            //                     c.proto.LineDefined, c.proto.LastLineDefined);
+            //             callLuaClosure(nArgs, nResults, c);
+            if (c.proto != null)
+            {
+                callLuaClosure(nArgs, nResults, c);
+            }
+            else
+            {
+                callCSharpClosure(nArgs, nResults, c);
+            }
         } else {
             throw new System.Exception("not function!");
+        }
+    }
+
+    private void callCSharpClosure(int nArgs, int nResults, Closure c)
+    {
+        // create new lua stack
+        LuaStack newStack = new LuaStack(/*nRegs+LUA_MINSTACK*/);
+        newStack.state = this;
+        newStack.closure = c;
+
+        // pass args, pop func
+        if (nArgs > 0)
+        {
+            newStack.pushN(stack.popN(nArgs), nArgs);
+        }
+        stack.pop();
+
+        // run closure
+        pushLuaStack(newStack);
+        int r = c.javaFunc.invoke(this);
+        popLuaStack();
+
+        // return results
+        if (nResults != 0)
+        {
+            List<Object> results = newStack.popN(r);
+            //stack.check(results.size())
+            stack.pushN(results, nResults);
         }
     }
 
@@ -550,7 +593,7 @@ public class LuaStateImpl : LuaState, LuaVM
         bool isVararg = c.proto.IsVararg == 1;
 
         // create new lua stack
-        LuaStack newStack = new LuaStack(/*nRegs + 20*/);
+        LuaStack newStack = new LuaStack(/*nRegs + LUA_MINSTACK*/);
         newStack.closure = c;
 
         // pass args, pop func
@@ -613,4 +656,52 @@ public class LuaStateImpl : LuaState, LuaVM
         Prototype proto = stack.closure.proto.Protos[idx];
         stack.push(new Closure(proto));
     }
+
+    public bool isCSharpFunction(int idx)
+    {
+        Object val = stack.get(idx);
+        return val instanceof Closure
+                && ((Closure)val).javaFunc != null;
+    }
+
+    public CSharpFunction toCSharpFunction(int idx)
+    {
+        Object val = stack.get(idx);
+        return val instanceof Closure
+                ? ((Closure)val).javaFunc
+                : null;
+    }
+
+    public void pushCSharpFunction(CSharpFunction f)
+    {
+        stack.push(new Closure(f));
+    }
+
+    public void register(String name, CSharpFunction f)
+    {
+        pushJavaFunction(f);
+        setGlobal(name);
+    }
+
+
+
+    public void pushGlobalTable()
+    {
+        stack.push(registry.get(LUA_RIDX_GLOBALS));
+    }
+
+    public LuaType getGlobal(String name)
+    {
+        Object t = registry.get(LUA_RIDX_GLOBALS);
+        return getTable(t, name);
+    }
+
+    public void setGlobal(String name)
+    {
+        Object t = registry.get(LUA_RIDX_GLOBALS);
+        Object v = stack.pop();
+        setTable(t, name, v);
+    }
+
+
 }

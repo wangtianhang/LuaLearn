@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 public interface LuaState
 {
 
+
     /* basic stack manipulation */
     int getTop();
     int absIndex(int idx);
@@ -66,4 +67,14 @@ public interface LuaState
     /* 'load' and 'call' functions (load and run Lua code) */
     ThreadStatus load(byte[] chunk, String chunkName, String mode);
     void call(int nArgs, int nResults);
+
+    bool isCSharpFunction(int idx);
+    CSharpFunction toCSharpFunction(int idx);
+    void pushCSharpFunction(CSharpFunction f);
+    void register(String name, CSharpFunction f);
+
+    void pushGlobalTable();
+    LuaType getGlobal(String name);
+    void setGlobal(String name);
+    
 }

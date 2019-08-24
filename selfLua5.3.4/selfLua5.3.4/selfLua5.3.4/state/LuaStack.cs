@@ -14,6 +14,7 @@ class LuaStack
     public int pc;
     /* linked list */
     public LuaStack prev;
+    LuaStateImpl state;
 
     public int top()
     {
@@ -67,17 +68,26 @@ class LuaStack
 
     public int absIndex(int idx)
     {
-        return idx >= 0 ? idx : idx + slots.Count + 1;
+        return idx >= 0 || idx <= LUA_REGISTRYINDEX
+        ? idx : idx + slots.size() + 1;
     }
 
     public bool isValid(int idx)
     {
+        if (idx == LUA_REGISTRYINDEX)
+        {
+            return true;
+        }
         int absIdx = absIndex(idx);
         return absIdx > 0 && absIdx <= slots.Count;
     }
 
     public Object get(int idx)
     {
+        if (idx == LUA_REGISTRYINDEX)
+        {
+            return state.registry;
+        }
         int absIdx = absIndex(idx);
         if (absIdx > 0 && absIdx <= slots.Count)
         {
@@ -91,6 +101,11 @@ class LuaStack
 
     public void set(int idx, Object val)
     {
+        if (idx == LUA_REGISTRYINDEX)
+        {
+            state.registry = (LuaTable)val;
+            return;
+        }
         int absIdx = absIndex(idx);
         slots[absIdx - 1] = val;
     }

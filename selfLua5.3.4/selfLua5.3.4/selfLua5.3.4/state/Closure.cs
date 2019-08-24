@@ -9,11 +9,16 @@ class Closure
 {
 
     public Prototype proto;
+    public CSharpFunction csharpFunc;
 
     public Closure(Prototype proto)
     {
         this.proto = proto;
     }
 
+    public Closure(CSharpFunction csharpFunc)
+    {
+        this.csharpFunc = csharpFunc;
+    }
 }
 
