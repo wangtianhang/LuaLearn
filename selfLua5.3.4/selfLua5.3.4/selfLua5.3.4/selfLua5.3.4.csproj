@@ -53,6 +53,7 @@
     <Compile Include="number\LuaMath.cs" />
     <Compile Include="number\LuaNumber.cs" />
     <Compile Include="state\Arithmetic.cs" />
+    <Compile Include="state\Closure.cs" />
     <Compile Include="state\Comparison.cs" />
     <Compile Include="state\LuaStack.cs" />
     <Compile Include="api\LuaState.cs" />

@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 class LuaStack
 {
     private List<Object> slots = new List<Object>();
+    /* call info */
+    Closure closure;
+    List<Object> varargs;
+    int pc;
+    /* linked list */
+    LuaStack prev;
 
     public int top()
     {
@@ -32,6 +38,31 @@ class LuaStack
         Object last = slots[slots.Count - 1];
         slots.RemoveAt(slots.Count - 1);
         return last;
+    }
+
+    void pushN(List<Object> vals, int n)
+    {
+        int nVals = vals == null ? 0 : vals.Count;
+        if (n < 0)
+        {
+            n = nVals;
+        }
+        for (int i = 0; i < n; i++)
+        {
+            push(i < nVals ? vals[i] : null);
+        }
+    }
+
+    List<Object> popN(int n)
+    {
+        List<Object> vals = new List<Object>(n);
+        for (int i = 0; i < n; i++)
+        {
+            vals.Add(pop());
+        }
+        //Collections.reverse(vals);
+        vals.Reverse();
+        return vals;
     }
 
     public int absIndex(int idx)
