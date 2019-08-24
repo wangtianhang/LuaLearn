@@ -589,4 +589,28 @@ public class LuaStateImpl : LuaState, LuaVM
             }
         }
     }
+
+    public int registerCount()
+    {
+        return stack.closure.proto.MaxStackSize;
+    }
+
+    public void loadVararg(int n)
+    {
+        List<Object> varargs = stack.varargs != null
+                ? stack.varargs : new List<object>();
+        if (n < 0)
+        {
+            n = varargs.Count;
+        }
+
+        //stack.check(n)
+        stack.pushN(varargs, n);
+    }
+
+    public void loadProto(int idx)
+    {
+        Prototype proto = stack.closure.proto.Protos[idx];
+        stack.push(new Closure(proto));
+    }
 }

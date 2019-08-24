@@ -21,7 +21,7 @@ public struct OpCode
     public static OpCode SETUPVAL = new OpCode("SETUPVAL", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, null); // UpValue[B] := R(A)
     public static OpCode SETTABLE = new OpCode("SETTABLE", 0, 0, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC, Instructions.setTable); // R(A)[RK(B)] := RK(C)
     public static OpCode NEWTABLE = new OpCode("NEWTABLE", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, Instructions.newTable); // R(A) := {} (size = B,C)
-    public static OpCode SELF = new OpCode("SELF", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgK, OpMode.iABC, null); // R(A+1) := R(B); R(A) := R(B)[RK(C)]
+    public static OpCode SELF = new OpCode("SELF", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgK, OpMode.iABC, Instructions.self); // R(A+1) := R(B); R(A) := R(B)[RK(C)]
     public static OpCode ADD = new OpCode("ADD", 0, 1, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC, Instructions.add); // R(A) := RK(B) + RK(C)
     public static OpCode SUB = new OpCode("SUB", 0, 1, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC, Instructions.sub); // R(A) := RK(B) - RK(C)
     public static OpCode MUL = new OpCode("MUL", 0, 1, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC, Instructions.mul); // R(A) := RK(B) * RK(C)
@@ -45,16 +45,16 @@ public struct OpCode
     public static OpCode LE = new OpCode("LE", 1, 0, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC, Instructions.le); // if ((RK(B) <= RK(C)) ~= A) then pc++
     public static OpCode TEST = new OpCode("TEST", 1, 0, OpArgMask.OpArgN, OpArgMask.OpArgU, OpMode.iABC, Instructions.test); // if not (R(A) <=> C) then pc++
     public static OpCode TESTSET = new OpCode("TESTSET", 1, 1, OpArgMask.OpArgR, OpArgMask.OpArgU, OpMode.iABC, Instructions.testSet); // if (R(B) <=> C) then R(A) := R(B) else pc++
-    public static OpCode CALL = new OpCode("CALL", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, null); // R(A), ... ,R(A+C-2) := R(A)(R(A+1), ... ,R(A+B-1))
-    public static OpCode TAILCALL = new OpCode("TAILCALL", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, null); // return R(A)(R(A+1), ... ,R(A+B-1))
-    public static OpCode RETURN = new OpCode("RETURN", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, null); // return R(A), ... ,R(A+B-2)
+    public static OpCode CALL = new OpCode("CALL", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, Instructions.call); // R(A), ... ,R(A+C-2) := R(A)(R(A+1), ... ,R(A+B-1))
+    public static OpCode TAILCALL = new OpCode("TAILCALL", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, Instructions.tailCall); // return R(A)(R(A+1), ... ,R(A+B-1))
+    public static OpCode RETURN = new OpCode("RETURN", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, Instructions._return); // return R(A), ... ,R(A+B-2)
     public static OpCode FORLOOP = new OpCode("FORLOOP", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx, Instructions.forLoop); // R(A)+=R(A+2); if R(A) <?= R(A+1) then { pc+=sBx; R(A+3)=R(A) }
     public static OpCode FORPREP = new OpCode("FORPREP", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx, Instructions.forPrep); // R(A)-=R(A+2); pc+=sBx
     public static OpCode TFORCALL = new OpCode("TFORCALL", 0, 0, OpArgMask.OpArgN, OpArgMask.OpArgU, OpMode.iABC, null); // R(A+3), ... ,R(A+2+C) := R(A)(R(A+1), R(A+2));
     public static OpCode TFORLOOP = new OpCode("TFORLOOP", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx, null); // if R(A+1) ~= nil then { R(A)=R(A+1); pc += sBx }
     public static OpCode SETLIST = new OpCode("SETLIST", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, Instructions.setList); // R(A)[(C-1)*FPF+i] := R(A+i), 1 <= i <= B
-    public static OpCode CLOSURE = new OpCode("CLOSURE", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABx, null); // R(A) := closure(KPROTO[Bx])
-    public static OpCode VARARG = new OpCode("VARARG", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, null); // R(A), R(A+1), ..., R(A+B-2) = vararg
+    public static OpCode CLOSURE = new OpCode("CLOSURE", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABx, Instructions.closure); // R(A) := closure(KPROTO[Bx])
+    public static OpCode VARARG = new OpCode("VARARG", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, Instructions.vararg); // R(A), R(A+1), ..., R(A+B-2) = vararg
     public static OpCode EXTRAARG = new OpCode("EXTRAARG", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iAx, null); // extra (larger) argument for previous opcode
 
     static bool s_Init = false;
