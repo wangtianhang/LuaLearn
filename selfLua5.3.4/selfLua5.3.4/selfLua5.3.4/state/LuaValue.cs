@@ -35,6 +35,9 @@ class LuaValue
         {
             return LuaType.LUA_TTABLE;
         }
+        else if (val is Closure) {
+            return LuaType.LUA_TFUNCTION;
+        } 
         else
         {
             throw new System.Exception("TODO");
