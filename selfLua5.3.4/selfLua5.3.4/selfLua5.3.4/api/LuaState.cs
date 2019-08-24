@@ -62,4 +62,8 @@ public interface LuaState
     void setTable(int idx);
     void setField(int idx, String k);
     void setI(int idx, long i);
+
+    /* 'load' and 'call' functions (load and run Lua code) */
+    ThreadStatus load(byte[] chunk, String chunkName, String mode);
+    void call(int nArgs, int nResults);
 }

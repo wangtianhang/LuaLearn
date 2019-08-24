@@ -59,10 +59,10 @@ class Arithmetic
         s_longOpList.Add((a, b) => a + b);
         s_longOpList.Add((a, b) => a - b);
         s_longOpList.Add((a, b) => a * b);
-        s_longOpList.Add((a, b) => MathHelper.floorMod(a, b));
+        s_longOpList.Add((a, b) => JavaHelper.floorMod(a, b));
         s_longOpList.Add(null);
         s_longOpList.Add(null);
-        s_longOpList.Add((a, b) => MathHelper.floorDiv(a, b));
+        s_longOpList.Add((a, b) => JavaHelper.floorDiv(a, b));
         s_longOpList.Add((a, b) => a & b);
         s_longOpList.Add((a, b) => a | b);
         s_longOpList.Add((a, b) => a ^ b);

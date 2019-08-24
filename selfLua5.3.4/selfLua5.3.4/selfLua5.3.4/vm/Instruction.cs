@@ -31,7 +31,7 @@ public class Instruction
 
     public static int getBx(int i)
     {
-        return MathHelper.UIntMoveRight(i, 14);
+        return JavaHelper.UIntMoveRight(i, 14);
     }
 
     public static int getSBx(int i)
@@ -41,6 +41,6 @@ public class Instruction
 
     public static int getAx(int i)
     {
-        return MathHelper.UIntMoveRight(i, 6);
+        return JavaHelper.UIntMoveRight(i, 6);
     }
 }

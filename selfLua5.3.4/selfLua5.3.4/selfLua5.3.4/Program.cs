@@ -106,25 +106,27 @@ class Program
 
     static void LuaMain(Prototype proto)
     {
-        LuaVM vm = new LuaStateImpl(proto);
-        vm.setTop(proto.MaxStackSize);
-        for (; ; )
-        {
-            int pc = vm.getPC();
-            int i = vm.fetch();
-            OpCode opCode = Instruction.getOpCode(i);
-            if (opCode != OpCode.RETURN)
-            {
-                opCode.action(i, vm);
+        return;
 
-                Console.Write("[{0}] {1} ", pc + 1, opCode.name);
-                PrintStackData.printStack(vm);
-            }
-            else
-            {
-                break;
-            }
-        }
+//         LuaVM vm = new LuaStateImpl(proto);
+//         vm.setTop(proto.MaxStackSize);
+//         for (; ; )
+//         {
+//             int pc = vm.getPC();
+//             int i = vm.fetch();
+//             OpCode opCode = Instruction.getOpCode(i);
+//             if (opCode != OpCode.RETURN)
+//             {
+//                 opCode.action(i, vm);
+// 
+//                 Console.Write("[{0}] {1} ", pc + 1, opCode.name);
+//                 PrintStackData.printStack(vm);
+//             }
+//             else
+//             {
+//                 break;
+//             }
+//         }
     }
 }
 //}

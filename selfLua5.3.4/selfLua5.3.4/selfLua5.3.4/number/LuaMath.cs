@@ -30,12 +30,12 @@ class LuaMath
 
     public static long shiftLeft(long a, int n)
     {
-        return n >= 0 ? a << n : MathHelper.ULongMoveRight(a, -n);
+        return n >= 0 ? a << n : JavaHelper.ULongMoveRight(a, -n);
     }
 
     public static long shiftRight(long a, int n)
     {
-        return n >= 0 ? MathHelper.ULongMoveRight(a, n) : a << -n;
+        return n >= 0 ? JavaHelper.ULongMoveRight(a, n) : a << -n;
     }
 }
 

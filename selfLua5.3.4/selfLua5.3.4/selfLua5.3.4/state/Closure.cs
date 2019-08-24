@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 class Closure
 {
 
-    Prototype proto;
+    public Prototype proto;
 
-    Closure(Prototype proto)
+    public Closure(Prototype proto)
     {
         this.proto = proto;
     }

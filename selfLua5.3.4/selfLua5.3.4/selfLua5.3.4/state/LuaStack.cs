@@ -9,11 +9,11 @@ class LuaStack
 {
     private List<Object> slots = new List<Object>();
     /* call info */
-    Closure closure;
-    List<Object> varargs;
-    int pc;
+    public Closure closure;
+    public List<Object> varargs;
+    public int pc;
     /* linked list */
-    LuaStack prev;
+    public LuaStack prev;
 
     public int top()
     {
@@ -40,7 +40,7 @@ class LuaStack
         return last;
     }
 
-    void pushN(List<Object> vals, int n)
+    public void pushN(List<Object> vals, int n)
     {
         int nVals = vals == null ? 0 : vals.Count;
         if (n < 0)
@@ -53,7 +53,7 @@ class LuaStack
         }
     }
 
-    List<Object> popN(int n)
+    public List<Object> popN(int n)
     {
         List<Object> vals = new List<Object>(n);
         for (int i = 0; i < n; i++)
@@ -99,7 +99,15 @@ class LuaStack
     {
         //Collections.reverse(slots.subList(from, to + 1));
         // 这块是猜的 有隐患
-        slots.Reverse(from - 1, to - from + 1);
+        //slots.Reverse(from - 1, to - from + 1);
+        if (to > from)
+        {
+            slots.Reverse(from, to - from + 1);
+        }
+        else if (to < from)
+        {
+            slots.Reverse(to, from - to + 1);
+        }
     }
 }
 

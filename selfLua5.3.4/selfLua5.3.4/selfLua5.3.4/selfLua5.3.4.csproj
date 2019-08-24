@@ -46,6 +46,7 @@
     <Compile Include="api\ArithOp.cs" />
     <Compile Include="api\CmpOp.cs" />
     <Compile Include="api\LuaVM.cs" />
+    <Compile Include="api\ThreadStatus.cs" />
     <Compile Include="binchunk\BinaryChunk.cs" />
     <Compile Include="binchunk\LocVar.cs" />
     <Compile Include="binchunk\Prototype.cs" />
@@ -59,7 +60,7 @@
     <Compile Include="api\LuaState.cs" />
     <Compile Include="state\LuaStateImpl.cs" />
     <Compile Include="api\LuaType.cs" />
-    <Compile Include="MathHelper.cs" />
+    <Compile Include="JavaHelper.cs" />
     <Compile Include="binchunk\PrintPrototype.cs" />
     <Compile Include="state\LuaTable.cs" />
     <Compile Include="state\LuaValue.cs" />

@@ -105,7 +105,7 @@ class ProcessLuaData
     {
         List<UInt32> opList = new List<uint>();
         UInt32 size = reader.ReadUInt32();
-        for(int i = 0; i < size; ++i)
+        for (int i = 0; i < size; ++i)
         {
             opList.Add(reader.ReadUInt32());
         }
@@ -115,7 +115,7 @@ class ProcessLuaData
     static Object ReadConstant(BinaryReader reader)
     {
         int type = reader.ReadByte();
-        switch(type)
+        switch (type)
         {
             case TAG_NIL:
                 return null;
@@ -138,7 +138,7 @@ class ProcessLuaData
     {
         List<Object> objList = new List<object>();
         UInt32 size = reader.ReadUInt32();
-        for(int i = 0; i < size; ++i)
+        for (int i = 0; i < size; ++i)
         {
             objList.Add(ReadConstant(reader));
         }
@@ -163,7 +163,7 @@ class ProcessLuaData
         protoType.upvalues = ReadUpvalues(reader);
         UInt32 protoSize = reader.ReadUInt32();
         List<Prototype> protoList = new List<Prototype>();
-        for(int i = 0; i < protoSize; ++i)
+        for (int i = 0; i < protoSize; ++i)
         {
             protoList.Add(ReadProtoType(reader));
         }
@@ -188,7 +188,7 @@ class ProcessLuaData
     {
         List<LocVar> locVarList = new List<LocVar>();
         UInt32 size = reader.ReadUInt32();
-        for(int i = 0; i < size; ++i)
+        for (int i = 0; i < size; ++i)
         {
             locVarList.Add(ReadLocVar(reader));
         }
@@ -243,6 +243,11 @@ class ProcessLuaData
     public static Prototype Undump(BinaryChunk chunk)
     {
         return chunk.mainFunc;
+    }
+
+    public static Prototype Undump(byte[] chunk)
+    {
+        return ProcessData(chunk).mainFunc;
     }
 }
 

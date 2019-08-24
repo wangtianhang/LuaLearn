@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-class MathHelper
+class JavaHelper
 {
     /// <summary>
     /// 无符号右移，与JS中的>>>等价
@@ -50,6 +50,13 @@ class MathHelper
     {
         long r = x - floorDiv(x, y) * y;
         return r;
+    }
+
+    // 左闭右开区间
+    public static List<Object> SubList(List<Object> list, int beginIndex, int endIndex)
+    {
+        int count = endIndex - beginIndex;
+        return list.GetRange(beginIndex, count);
     }
 }
 

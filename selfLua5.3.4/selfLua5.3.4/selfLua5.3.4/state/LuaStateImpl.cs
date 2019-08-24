@@ -8,20 +8,32 @@ public class LuaStateImpl : LuaState, LuaVM
 {
 
     private LuaStack stack = new LuaStack();
-    Prototype proto;
-    private int pc;
+    //Prototype proto;
+    //private int pc;
     /* basic stack manipulation */
 
-    public LuaStateImpl(Prototype proto)
+    //     public LuaStateImpl(Prototype proto)
+    //     {
+    //         this.proto = proto;
+    //     }
+    // 
+    //     public LuaStateImpl()
+    //     {
+    //         proto = null;
+    //     }
+
+    private void pushLuaStack(LuaStack newTop)
     {
-        this.proto = proto;
+        newTop.prev = this.stack;
+        this.stack = newTop;
     }
 
-    public LuaStateImpl()
+    private void popLuaStack()
     {
-        proto = null;
+        LuaStack top = this.stack;
+        this.stack = top.prev;
+        top.prev = null;
     }
-
 
     public int getTop()
     {
@@ -404,24 +416,24 @@ public class LuaStateImpl : LuaState, LuaVM
 
     /* LuaVM */
 
-    public int getPC()
-    {
-        return pc;
-    }
+     public int getPC()
+     {
+         return stack.pc;
+     }
 
     public void addPC(int n)
     {
-        pc += n;
+        stack.pc += n;
     }
 
     public int fetch()
     {
-        return (int)proto.Code[pc++];
+        return (int)stack.closure.proto.Code[stack.pc++];
     }
 
     public void getConst(int idx)
     {
-        stack.push(proto.Constants[idx]);
+        stack.push(stack.closure.proto.Constants[idx]);
     }
 
     public void getRK(int rk)
@@ -508,5 +520,73 @@ public class LuaStateImpl : LuaState, LuaVM
             return;
         }
         throw new System.Exception("not a table!");
+    }
+
+    /* 'load' and 'call' functions */
+    public ThreadStatus load(byte[] chunk, String chunkName, String mode)
+    {
+        Prototype proto = ProcessLuaData.Undump(chunk); // todo
+        stack.push(new Closure(proto));
+        return ThreadStatus.LUA_OK;
+    }
+
+    public void call(int nArgs, int nResults)
+    {
+        Object val = stack.get(-(nArgs + 1));
+        if (val is Closure) {
+            Closure c = (Closure)val;
+            Console.Write("call {0}<{1},{2}>\n", c.proto.Source,
+                    c.proto.LineDefined, c.proto.LastLineDefined);
+            callLuaClosure(nArgs, nResults, c);
+        } else {
+            throw new System.Exception("not function!");
+        }
+    }
+
+    private void callLuaClosure(int nArgs, int nResults, Closure c)
+    {
+        int nRegs = c.proto.MaxStackSize;
+        int nParams = c.proto.NumParams;
+        bool isVararg = c.proto.IsVararg == 1;
+
+        // create new lua stack
+        LuaStack newStack = new LuaStack(/*nRegs + 20*/);
+        newStack.closure = c;
+
+        // pass args, pop func
+        List<Object> funcAndArgs = stack.popN(nArgs + 1);
+        newStack.pushN(JavaHelper.SubList(funcAndArgs, 1, funcAndArgs.Count), nParams);
+        if (nArgs > nParams && isVararg)
+        {
+            newStack.varargs = JavaHelper.SubList(funcAndArgs, nParams + 1, funcAndArgs.Count);
+        }
+
+        // run closure
+        pushLuaStack(newStack);
+        setTop(nRegs);
+        runLuaClosure();
+        popLuaStack();
+
+        // return results
+        if (nResults != 0)
+        {
+            List<Object> results = newStack.popN(newStack.top() - nRegs);
+            //stack.check(results.size())
+            stack.pushN(results, nResults);
+        }
+    }
+
+    private void runLuaClosure()
+    {
+        for (; ; )
+        {
+            int i = fetch();
+            OpCode opCode = Instruction.getOpCode(i);
+            opCode.action(i, this);
+            if (opCode == OpCode.RETURN)
+            {
+                break;
+            }
+        }
     }
 }
