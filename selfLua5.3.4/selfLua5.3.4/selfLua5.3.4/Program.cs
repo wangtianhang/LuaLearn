@@ -155,22 +155,27 @@ class Program
         {
             if (ls.isBoolean(i))
             {
-                System.out.print(ls.toBoolean(i));
+                //System.out.print(ls.toBoolean(i));
+                Console.Write(ls.toBoolean(i));
             }
             else if (ls.isString(i))
             {
-                System.out.print(ls.toString(i));
+                //System.out.print(ls.toString(i));
+                Console.Write(ls.toString(i));
             }
             else
             {
-                System.out.print(ls.typeName(ls.type(i)));
+                //System.out.print(ls.typeName(ls.type(i)));
+                Console.Write(ls.typeName(ls.type(i)));
             }
             if (i < nArgs)
             {
-                System.out.print("\t");
+                //System.out.print("\t");
+                Console.Write("\t");
             }
         }
-        System.out.println();
+        //System.out.println();
+        Console.WriteLine();
         return 0;
     }
 }

@@ -15,7 +15,7 @@ public struct OpCode
     public static OpCode LOADBOOL = new OpCode("LOADBOOL", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, Instructions.loadBool); // R(A) := (bool)B; if (C) pc++
     public static OpCode LOADNIL = new OpCode("LOADNIL", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, Instructions.loadNil); // R(A), R(A+1), ..., R(A+B) := nil
     public static OpCode GETUPVAL = new OpCode("GETUPVAL", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, null); // R(A) := UpValue[B]
-    public static OpCode GETTABUP = new OpCode("GETTABUP", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgK, OpMode.iABC, Instructions::getTabUp); // R(A) := UpValue[B][RK(C)]
+    public static OpCode GETTABUP = new OpCode("GETTABUP", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgK, OpMode.iABC, Instructions.getTabUp); // R(A) := UpValue[B][RK(C)]
     public static OpCode GETTABLE = new OpCode("GETTABLE", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgK, OpMode.iABC, Instructions.getTable); // R(A) := R(B)[RK(C)]
     public static OpCode SETTABUP = new OpCode("SETTABUP", 0, 0, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC, null); // UpValue[A][RK(B)] := RK(C)
     public static OpCode SETUPVAL = new OpCode("SETUPVAL", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, null); // UpValue[B] := R(A)

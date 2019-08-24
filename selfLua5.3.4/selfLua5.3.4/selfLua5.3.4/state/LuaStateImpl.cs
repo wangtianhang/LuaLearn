@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public class LuaStateImpl : LuaState, LuaVM
 {
-    LuaTable registry = new LuaTable(0, 0);
+    public LuaTable registry = new LuaTable(0, 0);
     private LuaStack stack = new LuaStack();
     //Prototype proto;
     //private int pc;
@@ -23,7 +23,7 @@ public class LuaStateImpl : LuaState, LuaVM
     //     }
     public LuaStateImpl()
     {
-        registry.put(LUA_RIDX_GLOBALS, new LuaTable(0, 0));
+        registry.put(LuaConfig.LUA_RIDX_GLOBALS, new LuaTable(0, 0));
         LuaStack stack = new LuaStack();
         stack.state = this;
         pushLuaStack(stack);
@@ -574,7 +574,7 @@ public class LuaStateImpl : LuaState, LuaVM
 
         // run closure
         pushLuaStack(newStack);
-        int r = c.javaFunc.invoke(this);
+        int r = c.csharpFunc(this);
         popLuaStack();
 
         // return results
@@ -660,15 +660,15 @@ public class LuaStateImpl : LuaState, LuaVM
     public bool isCSharpFunction(int idx)
     {
         Object val = stack.get(idx);
-        return val instanceof Closure
-                && ((Closure)val).javaFunc != null;
+        return val is Closure
+                && ((Closure)val).csharpFunc != null;
     }
 
     public CSharpFunction toCSharpFunction(int idx)
     {
         Object val = stack.get(idx);
-        return val instanceof Closure
-                ? ((Closure)val).javaFunc
+        return val is Closure
+                ? ((Closure)val).csharpFunc
                 : null;
     }
 
@@ -679,7 +679,7 @@ public class LuaStateImpl : LuaState, LuaVM
 
     public void register(String name, CSharpFunction f)
     {
-        pushJavaFunction(f);
+        pushCSharpFunction(f);
         setGlobal(name);
     }
 
@@ -687,18 +687,18 @@ public class LuaStateImpl : LuaState, LuaVM
 
     public void pushGlobalTable()
     {
-        stack.push(registry.get(LUA_RIDX_GLOBALS));
+        stack.push(registry.get(LuaConfig.LUA_RIDX_GLOBALS));
     }
 
     public LuaType getGlobal(String name)
     {
-        Object t = registry.get(LUA_RIDX_GLOBALS);
+        Object t = registry.get(LuaConfig.LUA_RIDX_GLOBALS);
         return getTable(t, name);
     }
 
     public void setGlobal(String name)
     {
-        Object t = registry.get(LUA_RIDX_GLOBALS);
+        Object t = registry.get(LuaConfig.LUA_RIDX_GLOBALS);
         Object v = stack.pop();
         setTable(t, name, v);
     }

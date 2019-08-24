@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public interface CSharpFunction
-{
-    int invoke(LuaState ls);
-}
+// public interface CSharpFunction
+// {
+//     int invoke(LuaState ls);
+// }
 
+public delegate int CSharpFunction(LuaState ls);
