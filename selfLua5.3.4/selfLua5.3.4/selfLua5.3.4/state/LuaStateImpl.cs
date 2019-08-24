@@ -432,4 +432,78 @@ public class LuaStateImpl : LuaState, LuaVM
             pushValue(rk + 1);
         }
     }
+
+    /* get functions (Lua -> stack) */
+
+    public void newTable()
+    {
+        createTable(0, 0);
+    }
+
+    public void createTable(int nArr, int nRec)
+    {
+        stack.push(new LuaTable(nArr, nRec));
+    }
+
+    public LuaType getTable(int idx)
+    {
+        Object t = stack.get(idx);
+        Object k = stack.pop();
+        return getTable(t, k);
+    }
+
+    public LuaType getField(int idx, String k)
+    {
+        Object t = stack.get(idx);
+        return getTable(t, k);
+    }
+
+    public LuaType getI(int idx, long i)
+    {
+        Object t = stack.get(idx);
+        return getTable(t, i);
+    }
+
+    private LuaType getTable(Object t, Object k)
+    {
+        if (t is LuaTable) {
+            Object v = ((LuaTable)t).get(k);
+            stack.push(v);
+            return LuaValue.typeOf(v);
+        }
+        throw new System.Exception("not a table!"); // todo
+    }
+
+    /* set functions (stack -> Lua) */
+
+    public void setTable(int idx)
+    {
+        Object t = stack.get(idx);
+        Object v = stack.pop();
+        Object k = stack.pop();
+        setTable(t, k, v);
+    }
+
+    public void setField(int idx, String k)
+    {
+        Object t = stack.get(idx);
+        Object v = stack.pop();
+        setTable(t, k, v);
+    }
+
+    public void setI(int idx, long i)
+    {
+        Object t = stack.get(idx);
+        Object v = stack.pop();
+        setTable(t, i, v);
+    }
+
+    private void setTable(Object t, Object k, Object v)
+    {
+        if (t is LuaTable) {
+            ((LuaTable)t).put(k, v);
+            return;
+        }
+        throw new System.Exception("not a table!");
+    }
 }

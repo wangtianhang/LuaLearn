@@ -60,11 +60,13 @@
     <Compile Include="api\LuaType.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="binchunk\PrintPrototype.cs" />
+    <Compile Include="state\LuaTable.cs" />
     <Compile Include="state\LuaValue.cs" />
     <Compile Include="state\PrintStackData.cs" />
     <Compile Include="binchunk\ProcessLuaData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="vm\FPB.cs" />
     <Compile Include="vm\Instruction.cs" />
     <Compile Include="vm\Instructions.cs" />
     <Compile Include="vm\OpAction.cs" />
