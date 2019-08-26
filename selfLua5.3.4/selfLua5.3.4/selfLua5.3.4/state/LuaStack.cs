@@ -146,14 +146,15 @@ class LuaStack
         //Collections.reverse(slots.subList(from, to + 1));
         // 这块是猜的 有隐患
         //slots.Reverse(from - 1, to - from + 1);
-        if (to > from)
-        {
-            slots.Reverse(from, to - from + 1);
-        }
-        else if (to < from)
-        {
-            slots.Reverse(to, from - to + 1);
-        }
+        //         if (to > from)
+        //         {
+        //             slots.Reverse(from, to - from + 1);
+        //         }
+        //         else if (to < from)
+        //         {
+        //             slots.Reverse(to, from - to + 1);
+        //         }
+        slots.Reverse(from, to - from + 1);
     }
 }
 

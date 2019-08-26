@@ -44,7 +44,15 @@ public class LuaTable
             }
         }
 
-        return map != null ? map[key] : null;
+        //return map != null ? map[key] : null;
+        if (map != null && map.ContainsKey(key))
+        {
+            return map[key];
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public void put(Object key, Object val)

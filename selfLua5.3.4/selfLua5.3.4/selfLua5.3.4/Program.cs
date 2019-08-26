@@ -29,7 +29,8 @@ class Program
 
         //TestChapter09();
 
-        TestChapter10();
+        //TestChapter10();
+        TestChapter11();
 
         Console.WriteLine("selflua end");
         Console.ReadLine();
@@ -163,7 +164,7 @@ class Program
 
     static void TestChapter11()
     {
-        byte[] data = File.ReadAllBytes(@".\closure_test.luac.out");
+        byte[] data = File.ReadAllBytes(@".\metatable_test.luac.out");
         LuaState ls = new LuaStateImpl();
         ls.register("print", print);
         ls.register("getmetatable", getMetatable);
