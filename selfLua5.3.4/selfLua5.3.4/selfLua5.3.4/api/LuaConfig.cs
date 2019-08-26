@@ -11,5 +11,7 @@ class LuaConfig
     public static int LUAI_MAXSTACK = 1000000;
     public static int LUA_REGISTRYINDEX = -LUAI_MAXSTACK - 1000;
     public static long LUA_RIDX_GLOBALS = 2;
+
+    public const string NULL_ALIAS = "null";
 }
 

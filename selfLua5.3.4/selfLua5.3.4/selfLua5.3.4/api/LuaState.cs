@@ -86,4 +86,6 @@ public interface LuaState
     void rawSet(int idx);
     void rawSetI(int idx, long i);
     void setMetatable(int idx);
+
+    bool next(int idx);
 }

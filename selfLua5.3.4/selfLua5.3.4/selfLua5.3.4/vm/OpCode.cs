@@ -50,8 +50,8 @@ public struct OpCode
     public static OpCode RETURN = new OpCode("RETURN", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, Instructions._return); // return R(A), ... ,R(A+B-2)
     public static OpCode FORLOOP = new OpCode("FORLOOP", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx, Instructions.forLoop); // R(A)+=R(A+2); if R(A) <?= R(A+1) then { pc+=sBx; R(A+3)=R(A) }
     public static OpCode FORPREP = new OpCode("FORPREP", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx, Instructions.forPrep); // R(A)-=R(A+2); pc+=sBx
-    public static OpCode TFORCALL = new OpCode("TFORCALL", 0, 0, OpArgMask.OpArgN, OpArgMask.OpArgU, OpMode.iABC, null); // R(A+3), ... ,R(A+2+C) := R(A)(R(A+1), R(A+2));
-    public static OpCode TFORLOOP = new OpCode("TFORLOOP", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx, null); // if R(A+1) ~= nil then { R(A)=R(A+1); pc += sBx }
+    public static OpCode TFORCALL = new OpCode("TFORCALL", 0, 0, OpArgMask.OpArgN, OpArgMask.OpArgU, OpMode.iABC, Instructions.tForCall); // R(A+3), ... ,R(A+2+C) := R(A)(R(A+1), R(A+2));
+    public static OpCode TFORLOOP = new OpCode("TFORLOOP", 0, 1, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx, Instructions.tForLoop); // if R(A+1) ~= nil then { R(A)=R(A+1); pc += sBx }
     public static OpCode SETLIST = new OpCode("SETLIST", 0, 0, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC, Instructions.setList); // R(A)[(C-1)*FPF+i] := R(A+i), 1 <= i <= B
     public static OpCode CLOSURE = new OpCode("CLOSURE", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABx, Instructions.closure); // R(A) := closure(KPROTO[Bx])
     public static OpCode VARARG = new OpCode("VARARG", 0, 1, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC, Instructions.vararg); // R(A), R(A+1), ..., R(A+B-2) = vararg

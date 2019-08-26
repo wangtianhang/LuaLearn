@@ -972,4 +972,22 @@ public class LuaStateImpl : LuaState, LuaVM
             throw new System.Exception("table expected!"); // todo
         }
     }
+
+    public bool next(int idx)
+    {
+        Object val = stack.get(idx);
+        if (val is LuaTable) {
+            LuaTable t = (LuaTable)val;
+            Object key = stack.pop();
+            Object nextKey = t.nextKey(key);
+            if (nextKey != null)
+            {
+                stack.push(nextKey);
+                stack.push(t.get(nextKey));
+                return true;
+            }
+            return false;
+        }
+        throw new System.Exception("table expected!");
+    }
 }

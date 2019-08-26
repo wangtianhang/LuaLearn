@@ -10,6 +10,11 @@ public class LuaTable
     private List<Object> arr;
     private Dictionary<Object, Object> map;
 
+    // used by next()
+    private Dictionary<Object, Object> keys;
+    private Object lastKey;
+    private bool changed;
+
     public LuaTable(int nArr, int nRec)
     {
         if (nArr > 0)
@@ -66,6 +71,7 @@ public class LuaTable
             throw new System.Exception("table index is NaN!");
         }
 
+        changed = true;
         key = floatToInteger(key);
         if (key is long) {
             int idx = (int)((long)key);
@@ -108,6 +114,7 @@ public class LuaTable
             {
                 map = new Dictionary<object, object>();
             }
+            map.Remove(key);
             map.Add(key, val);
         }
         else
@@ -161,4 +168,64 @@ public class LuaTable
         }
     }
 
+    public Object nextKey(Object key)
+    {
+        if (keys == null || (key == null && changed))
+        {
+            initKeys();
+            changed = false;
+        }
+
+        Object nextKey = null;
+        // 当key为null时返回LuaConfig.NULL_ALIAS
+        keys.TryGetValue(key ?? LuaConfig.NULL_ALIAS, out nextKey);
+        if (nextKey == null && key != null && key != lastKey)
+        {
+            throw new System.Exception("invalid key to 'next'");
+        }
+
+        return nextKey;
+    }
+
+    private void initKeys()
+    {
+        if (keys == null)
+        {
+            keys = new Dictionary<object, object>();
+        }
+        else
+        {
+            keys.Clear();
+        }
+        Object key = LuaConfig.NULL_ALIAS;
+        if (arr != null)
+        {
+            for (int i = 0; i < arr.Count; i++)
+            {
+                if (arr[i] != null)
+                {
+                    long nextKey = i + 1;
+                    keys.Add(key, nextKey);
+                    key = nextKey;
+                }
+            }
+        }
+        if (map != null)
+        {
+//             for (Object k : map.keySet())
+//             {
+//                 Object v = map.get(k);
+//                 if (v != null)
+//                 {
+            foreach(var iter in map)
+            { 
+                if(iter.Value != null)
+                { 
+                    keys.Add(key, iter.Key);
+                    key = iter.Key;
+                }
+            }
+        }
+        lastKey = key;
+    }
 }

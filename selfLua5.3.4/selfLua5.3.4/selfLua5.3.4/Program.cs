@@ -30,7 +30,9 @@ class Program
         //TestChapter09();
 
         //TestChapter10();
-        TestChapter11();
+        //TestChapter11();
+
+        TestChapter12();
 
         Console.WriteLine("selflua end");
         Console.ReadLine();
@@ -173,6 +175,23 @@ class Program
         ls.call(0, 0);
     }
 
+    static void TestChapter12()
+    {
+        byte[] data = File.ReadAllBytes(@".\iter_test.luac.out");
+        LuaState ls = new LuaStateImpl();
+        ls.register("print", print);
+        ls.register("getmetatable", getMetatable);
+        ls.register("setmetatable", setMetatable);
+
+        ls.register("next", next);
+        ls.register("pairs", pairs);
+        ls.register("ipairs", iPairs);
+
+        ls.load(data, "gaga", "b");
+        ls.call(0, 0);
+
+    }
+
     private static int print(LuaState ls)
     {
         int nArgs = ls.getTop();
@@ -217,6 +236,43 @@ class Program
     {
         ls.setMetatable(1);
         return 1;
+    }
+
+    private static int next(LuaState ls)
+    {
+        ls.setTop(2); /* create a 2nd argument if there isn't one */
+        if (ls.next(1))
+        {
+            return 2;
+        }
+        else
+        {
+            ls.pushNil();
+            return 1;
+        }
+    }
+
+    private static int pairs(LuaState ls)
+    {
+        ls.pushCSharpFunction(next); /* will return generator, */
+        ls.pushValue(1);                 /* state, */
+        ls.pushNil();
+        return 3;
+    }
+
+    private static int iPairs(LuaState ls)
+    {
+        ls.pushCSharpFunction(iPairsAux); /* iteration function */
+        ls.pushValue(1);                      /* state */
+        ls.pushInteger(0);                    /* initial value */
+        return 3;
+    }
+
+    private static int iPairsAux(LuaState ls)
+    {
+        long i = ls.toInteger(2) + 1;
+        ls.pushInteger(i);
+        return ls.getI(1, i) == LuaType.LUA_TNIL ? 1 : 2;
     }
 }
 //}
