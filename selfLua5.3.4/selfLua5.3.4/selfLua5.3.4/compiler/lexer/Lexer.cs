@@ -11,7 +11,8 @@ class Lexer
     private static Regex reNewLine = new Regex("\r\n|\n\r|\n|\r");
     private static Regex reIdentifier = new Regex("^[_\\d\\w]+");
     private static Regex reNumber = new Regex("^0[xX][0-9a-fA-F]*(\\.[0-9a-fA-F]*)?([pP][+\\-]?[0-9]+)?|^[0-9]*(\\.[0-9]*)?([eE][+\\-]?[0-9]+)?");
-    private static Regex reShortStr = new Regex("(?s)(^'(\\\\\\\\|\\\\'|\\\\\\n|\\\\z\\s*|[^'\\n])*')|(^\"(\\\\\\\\|\\\\\"|\\\\\\n|\\\\z\\s*|[^\"\\n])*\")");
+    //private static Regex reShortStr = new Regex("(?s)(^'(\\\\\\\\|\\\\'|\\\\\\n|\\\\z\\s*|[^'\\n])*')|(^\"(\\\\\\\\|\\\\\"|\\\\\\n|\\\\z\\s*|[^\"\\n])*\")");
+    private static Regex reShortStr = new Regex("['\"].*['\"]");
     private static Regex reOpeningLongBracket = new Regex("^\\[=*\\[");
 
     private CharSeq chunk;
