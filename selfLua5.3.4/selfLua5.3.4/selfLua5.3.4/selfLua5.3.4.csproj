@@ -49,6 +49,7 @@
     <Compile Include="api\LuaConfig.cs" />
     <Compile Include="api\LuaVM.cs" />
     <Compile Include="api\ThreadStatus.cs" />
+    <Compile Include="BaseLib.cs" />
     <Compile Include="binchunk\BinaryChunk.cs" />
     <Compile Include="binchunk\LocVar.cs" />
     <Compile Include="binchunk\Prototype.cs" />

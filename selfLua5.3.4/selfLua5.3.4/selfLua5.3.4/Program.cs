@@ -150,7 +150,7 @@ class Program
     {
         byte[] data = File.ReadAllBytes(@".\hello_world.luac.out");
         LuaState ls = new LuaStateImpl();
-        ls.register("print", print);
+        ls.register("print", BaseLib.print);
         ls.load(data, "gaga", "b");
         ls.call(0, 0);
     }
@@ -159,7 +159,7 @@ class Program
     {
         byte[] data = File.ReadAllBytes(@".\closure_test.luac.out");
         LuaState ls = new LuaStateImpl();
-        ls.register("print", print);
+        ls.register("print", BaseLib.print);
         ls.load(data, "gaga", "b");
         ls.call(0, 0);
     }
@@ -168,9 +168,9 @@ class Program
     {
         byte[] data = File.ReadAllBytes(@".\metatable_test.luac.out");
         LuaState ls = new LuaStateImpl();
-        ls.register("print", print);
-        ls.register("getmetatable", getMetatable);
-        ls.register("setmetatable", setMetatable);
+        ls.register("print", BaseLib.print);
+        ls.register("getmetatable", BaseLib.getMetatable);
+        ls.register("setmetatable", BaseLib.setMetatable);
         ls.load(data, "gaga", "b");
         ls.call(0, 0);
     }
@@ -179,100 +179,19 @@ class Program
     {
         byte[] data = File.ReadAllBytes(@".\iter_test.luac.out");
         LuaState ls = new LuaStateImpl();
-        ls.register("print", print);
-        ls.register("getmetatable", getMetatable);
-        ls.register("setmetatable", setMetatable);
+        ls.register("print", BaseLib.print);
+        ls.register("getmetatable", BaseLib.getMetatable);
+        ls.register("setmetatable", BaseLib.setMetatable);
 
-        ls.register("next", next);
-        ls.register("pairs", pairs);
-        ls.register("ipairs", iPairs);
+        ls.register("next", BaseLib.next);
+        ls.register("pairs", BaseLib.pairs);
+        ls.register("ipairs", BaseLib.iPairs);
 
         ls.load(data, "gaga", "b");
         ls.call(0, 0);
 
     }
 
-    private static int print(LuaState ls)
-    {
-        int nArgs = ls.getTop();
-        for (int i = 1; i <= nArgs; i++)
-        {
-            if (ls.isBoolean(i))
-            {
-                //System.out.print(ls.toBoolean(i));
-                Console.Write(ls.toBoolean(i));
-            }
-            else if (ls.isString(i))
-            {
-                //System.out.print(ls.toString(i));
-                Console.Write(ls.toString(i));
-            }
-            else
-            {
-                //System.out.print(ls.typeName(ls.type(i)));
-                Console.Write(ls.typeName(ls.type(i)));
-            }
-            if (i < nArgs)
-            {
-                //System.out.print("\t");
-                Console.Write("\t");
-            }
-        }
-        //System.out.println();
-        Console.WriteLine();
-        return 0;
-    }
 
-    private static int getMetatable(LuaState ls)
-    {
-        if (!ls.getMetatable(1))
-        {
-            ls.pushNil();
-        }
-        return 1;
-    }
-
-    private static int setMetatable(LuaState ls)
-    {
-        ls.setMetatable(1);
-        return 1;
-    }
-
-    private static int next(LuaState ls)
-    {
-        ls.setTop(2); /* create a 2nd argument if there isn't one */
-        if (ls.next(1))
-        {
-            return 2;
-        }
-        else
-        {
-            ls.pushNil();
-            return 1;
-        }
-    }
-
-    private static int pairs(LuaState ls)
-    {
-        ls.pushCSharpFunction(next); /* will return generator, */
-        ls.pushValue(1);                 /* state, */
-        ls.pushNil();
-        return 3;
-    }
-
-    private static int iPairs(LuaState ls)
-    {
-        ls.pushCSharpFunction(iPairsAux); /* iteration function */
-        ls.pushValue(1);                      /* state */
-        ls.pushInteger(0);                    /* initial value */
-        return 3;
-    }
-
-    private static int iPairsAux(LuaState ls)
-    {
-        long i = ls.toInteger(2) + 1;
-        ls.pushInteger(i);
-        return ls.getI(1, i) == LuaType.LUA_TNIL ? 1 : 2;
-    }
 }
 //}
