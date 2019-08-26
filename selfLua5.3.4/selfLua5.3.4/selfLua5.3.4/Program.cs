@@ -34,9 +34,9 @@ class Program
 
         //TestChapter12();
 
-        //TestChapter13();
+        TestChapter13();
 
-        TestChapter14();
+        //TestChapter14();
 
         Console.WriteLine("selflua end");
         Console.ReadLine();
@@ -217,7 +217,8 @@ class Program
 
     static void TestChapter14()
     {
-        string text = File.ReadAllText("./hello_world.lua");
+        // 编译部分不是很稳定。。先算了。。
+        string text = File.ReadAllText("./metatable_test.lua");
         testLexer(text, "gaga");
     }
 
