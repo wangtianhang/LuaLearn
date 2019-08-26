@@ -990,4 +990,33 @@ public class LuaStateImpl : LuaState, LuaVM
         }
         throw new System.Exception("table expected!");
     }
+
+    public ThreadStatus pCall(int nArgs, int nResults, int msgh)
+    {
+        LuaStack caller = stack;
+        try
+        {
+            call(nArgs, nResults);
+            return ThreadStatus.LUA_OK;
+        }
+        catch (Exception e)
+        {
+            if (msgh != 0)
+            {
+                throw e;
+            }
+            while (stack != caller)
+            {
+                popLuaStack();
+            }
+            stack.push(e.Message); // TODO
+            return ThreadStatus.LUA_ERRRUN;
+        }
+    }
+
+    public int error()
+    {
+        Object err = stack.pop();
+        throw new System.Exception(err.ToString()); // TODO
+    }
 }

@@ -88,4 +88,7 @@ public interface LuaState
     void setMetatable(int idx);
 
     bool next(int idx);
+
+    ThreadStatus pCall(int nArgs, int nResults, int msgh);
+    int error();
 }

@@ -32,7 +32,9 @@ class Program
         //TestChapter10();
         //TestChapter11();
 
-        TestChapter12();
+        //TestChapter12();
+
+        TestChapter13();
 
         Console.WriteLine("selflua end");
         Console.ReadLine();
@@ -192,6 +194,23 @@ class Program
 
     }
 
+    static void TestChapter13()
+    {
+        byte[] data = File.ReadAllBytes(@".\error_test.luac.out");
+        LuaState ls = new LuaStateImpl();
+        ls.register("print", BaseLib.print);
+        ls.register("getmetatable", BaseLib.getMetatable);
+        ls.register("setmetatable", BaseLib.setMetatable);
 
+        ls.register("next", BaseLib.next);
+        ls.register("pairs", BaseLib.pairs);
+        ls.register("ipairs", BaseLib.iPairs);
+
+        ls.register("error", BaseLib.error);
+        ls.register("pcall", BaseLib.pCall);
+
+        ls.load(data, "gaga", "b");
+        ls.call(0, 0);
+    }
 }
 //}

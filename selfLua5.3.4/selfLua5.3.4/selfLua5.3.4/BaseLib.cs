@@ -89,5 +89,19 @@ class BaseLib
         ls.pushInteger(i);
         return ls.getI(1, i) == LuaType.LUA_TNIL ? 1 : 2;
     }
+
+    public static int error(LuaState ls)
+    {
+        return ls.error();
+    }
+
+    public static int pCall(LuaState ls)
+    {
+        int nArgs = ls.getTop() - 1;
+        ThreadStatus status = ls.pCall(nArgs, -1, 0);
+        ls.pushBoolean(status == ThreadStatus.LUA_OK);
+        ls.insert(1);
+        return ls.getTop();
+    }
 }
 
