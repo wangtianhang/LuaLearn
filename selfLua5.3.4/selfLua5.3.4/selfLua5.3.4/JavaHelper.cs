@@ -58,5 +58,36 @@ class JavaHelper
         int count = endIndex - beginIndex;
         return list.GetRange(beginIndex, count);
     }
+
+    public static bool JavaStyleStartsWith(string s, string prefix, int tOffset)
+    {
+        if (s == null)
+            throw new Exception("badness");
+
+        if (s == "" && prefix == "")
+        {
+            if (tOffset == 0)
+                return true;
+            else
+                return false;
+        }
+
+        if (s == "" && prefix != "")
+            return false;
+
+        if (tOffset == s.Length)
+            return false;
+
+        int len = prefix.Length;
+        if (len > s.Length)
+            return false;
+
+        if (len > s.Length - tOffset)
+            return false;
+
+        int idx = s.IndexOf(prefix, tOffset, len);
+        if (idx >= 0) return true;
+        else return false;
+    }
 }
 

@@ -34,7 +34,10 @@ class CharSeq
 
     public bool startsWith(String prefix)
     {
-        return str.IndexOf(prefix, pos) > 0;
+        //return str.IndexOf(prefix, pos) > 0;
+        //string subString = str.Substring(pos);
+        //return subString.StartsWith(prefix);
+        return JavaHelper.JavaStyleStartsWith(str, prefix, pos);
     }
 
     public int indexOf(String s)

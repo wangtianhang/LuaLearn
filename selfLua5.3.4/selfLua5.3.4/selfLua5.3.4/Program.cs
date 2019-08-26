@@ -34,7 +34,9 @@ class Program
 
         //TestChapter12();
 
-        TestChapter13();
+        //TestChapter13();
+
+        TestChapter14();
 
         Console.WriteLine("selflua end");
         Console.ReadLine();
@@ -211,6 +213,60 @@ class Program
 
         ls.load(data, "gaga", "b");
         ls.call(0, 0);
+    }
+
+    static void TestChapter14()
+    {
+        string text = File.ReadAllText("./hello_world.lua");
+        testLexer(text, "gaga");
+    }
+
+    private static void testLexer(String chunk, String chunkName)
+    {
+        Lexer lexer = new Lexer(chunk, chunkName);
+        for (; ; )
+        {
+            Token token = lexer.nextToken();
+            Console.Write("[{0}] [{1}] {2}\n",
+                    token.line, kindToCategory(token.kind), token.value);
+            if (token.kind == TokenKind.TOKEN_EOF)
+            {
+                break;
+            }
+        }
+    }
+
+    private static String kindToCategory(TokenKind kind)
+    {
+        if (kind < TokenKind.TOKEN_SEP_SEMI)
+        {
+            return "other";
+        }
+        if (kind <= TokenKind.TOKEN_SEP_RCURLY)
+        {
+            return "separator";
+        }
+        if (kind <= TokenKind.TOKEN_OP_NOT)
+        {
+            return "operator";
+        }
+        if (kind <= TokenKind.TOKEN_KW_WHILE)
+        {
+            return "keyword";
+        }
+        if (kind == TokenKind.TOKEN_IDENTIFIER)
+        {
+            return "identifier";
+        }
+        if (kind == TokenKind.TOKEN_NUMBER)
+        {
+            return "number";
+        }
+        if (kind == TokenKind.TOKEN_STRING)
+        {
+            return "string";
+        }
+        return "other";
     }
 }
 //}
