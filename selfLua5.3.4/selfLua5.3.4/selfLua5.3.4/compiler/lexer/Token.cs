@@ -7,7 +7,14 @@ using System.Threading.Tasks;
 
 class Token
 {
-    static Dictionary<String, TokenKind> keywords = new Dictionary<String, TokenKind>();
+    public static Dictionary<String, TokenKind> keywords = new Dictionary<String, TokenKind>();
+
+    public static TokenKind GetTokenKind(string id)
+    {
+        TokenKind ret = (TokenKind)( -1);
+        keywords.TryGetValue(id, out ret);
+        return ret;
+    }
 
     static int Init()
     {
@@ -39,9 +46,9 @@ class Token
 
     static int tmp = Init();
 
-    private int line;
-    private TokenKind kind;
-    private String value;
+    public int line;
+    public TokenKind kind;
+    public String value;
 
     public Token(int line, TokenKind kind, String value)
     {

@@ -33,10 +33,10 @@ class Lexer
         return cachedNextToken != null ? lineBackup : line;
     }
 
-    <T> T error(String fmt, Object...args)
+    public T error<T>(String fmt, params Object[] args)
     {
-        String msg = String.format(fmt, args);
-        msg = String.format("%s:%d: %s", chunkName, line(), msg);
+        String msg = String.Format(fmt, args);
+        msg = String.Format("{0}:{1}: {2}", chunkName, getline(), msg);
         throw new System.Exception(msg);
     }
 
@@ -47,20 +47,20 @@ class Lexer
             lineBackup = line;
             cachedNextToken = nextToken();
         }
-        return cachedNextToken.getKind();
+        return cachedNextToken.kind;
     }
 
     public Token nextIdentifier()
     {
-        return nextTokenOfKind(TOKEN_IDENTIFIER);
+        return nextTokenOfKind(TokenKind.TOKEN_IDENTIFIER);
     }
 
     public Token nextTokenOfKind(TokenKind kind)
     {
         Token token = nextToken();
-        if (token.getKind() != kind)
+        if (token.kind != kind)
         {
-            error("syntax error near '%s'", token.getValue());
+            error<string>("syntax error near '%s'", token.value);
         }
         return token;
     }
@@ -77,7 +77,7 @@ class Lexer
         skipWhiteSpaces();
         if (chunk.length() <= 0)
         {
-            return new Token(line, TOKEN_EOF, "EOF");
+            return new Token(line, TokenKind.TOKEN_EOF, "EOF");
         }
 
         switch (chunk.charAt(0))
@@ -213,12 +213,12 @@ class Lexer
         if (c == '_' || CharUtil.isLetter(c))
         {
             String id = scanIdentifier();
-            return Token.keywords.containsKey(id)
-                    ? new Token(line, Token.keywords.get(id), id)
+            return Token.keywords.ContainsKey(id)
+                    ? new Token(line, Token.GetTokenKind(id), id)
                     : new Token(line, TokenKind.TOKEN_IDENTIFIER, id);
         }
 
-        return error("unexpected symbol near %c", c);
+        return error<Token>("unexpected symbol near %c", c);
     }
 
     private void skipWhiteSpaces()
@@ -281,14 +281,14 @@ class Lexer
         return scan(reNumber);
     }
 
-    private String scan(Pattern pattern)
+    private String scan(Regex pattern)
     {
         String token = chunk.find(pattern);
         if (token == null)
         {
             throw new System.Exception("unreachable!");
         }
-        chunk.next(token.length());
+        chunk.next(token.Length);
         return token;
     }
 
@@ -297,25 +297,36 @@ class Lexer
         String openingLongBracket = chunk.find(reOpeningLongBracket);
         if (openingLongBracket == null)
         {
-            return error("invalid long string delimiter near '%s'",
+            return error<string>("invalid long string delimiter near '%s'",
                     chunk.substring(0, 2));
         }
 
-        String closingLongBracket = openingLongBracket.replace("[", "]");
+        String closingLongBracket = openingLongBracket.Replace("[", "]");
         int closingLongBracketIdx = chunk.indexOf(closingLongBracket);
         if (closingLongBracketIdx < 0)
         {
-            return error("unfinished long string or comment");
+            return error<string>("unfinished long string or comment");
         }
 
-        String str = chunk.substring(openingLongBracket.length(), closingLongBracketIdx);
-        chunk.next(closingLongBracketIdx + closingLongBracket.length());
+        String str = chunk.substring(openingLongBracket.Length, closingLongBracketIdx);
+        chunk.next(closingLongBracketIdx + closingLongBracket.Length);
 
-        str = reNewLine.matcher(str).replaceAll("\n");
-        line += str.chars().filter(c->c == '\n').count();
-        if (str.startsWith("\n"))
+        
+        //str = reNewLine.matcher(str).replaceAll("\n");
+        str = reNewLine.Match(str).Value.Replace("\n", "");
+        int count = 0;
+        for (int i = 0; i < str.Length; ++i)
         {
-            str = str.substring(1);
+            if(str[i] == '\n')
+            {
+                count += 1;
+            }
+        }
+        //line += str.chars().filter(c->c == '\n').count();
+        line += count;
+        if (str.StartsWith("\n"))
+        {
+            str = str.Substring(1);
         }
 
         return str;
@@ -326,16 +337,17 @@ class Lexer
         String str = chunk.find(reShortStr);
         if (str != null)
         {
-            chunk.next(str.length());
-            str = str.substring(1, str.length() - 1);
-            if (str.indexOf('\\') >= 0)
+            chunk.next(str.Length);
+            int count = str.Length - 1 - 1;
+            str = str.Substring(1, count);
+            if (str.IndexOf('\\') >= 0)
             {
-                line += reNewLine.split(str).length - 1;
+                line += reNewLine.Split(str).Length - 1;
                 str = new Escaper(str, this).escape();
             }
             return str;
         }
-        return error("unfinished string");
+        return error<string>("unfinished string");
     }
 }
 

@@ -27,12 +27,12 @@ class CharUtil
         return c == '\r' || c == '\n';
     }
 
-    static bool isDigit(char c)
+    public static bool isDigit(char c)
     {
         return c >= '0' && c <= '9';
     }
 
-    static bool isLetter(char c)
+    public static bool isLetter(char c)
     {
         return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
     }

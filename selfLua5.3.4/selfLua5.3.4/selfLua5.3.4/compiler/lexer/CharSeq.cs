@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Text.RegularExpressions;
 
-class CharSequence
-{
+// class CharSequence
+// {
+// 
+// }
 
-}
-
-class CharSeq : CharSequence
+class CharSeq 
 {
     private String str;
     private int pos;
@@ -33,24 +34,30 @@ class CharSeq : CharSequence
 
     public bool startsWith(String prefix)
     {
-        return str.StartsWith(prefix, pos);
+        return str.IndexOf(prefix, pos) > 0;
     }
 
-    int indexOf(String s)
+    public int indexOf(String s)
     {
         return str.IndexOf(s, pos) - pos;
     }
 
-    String substring(int beginIndex, int endIndex)
+    public String substring(int beginIndex, int endIndex)
     {
         return str.Substring(beginIndex + pos, endIndex + pos);
     }
 
-    String find(Pattern pattern)
+    public String find(Regex pattern)
     {
-        Matcher matcher = pattern.matcher(this);
-        return matcher.find()
-                ? matcher.group(0) : null;
+        Match matcher = pattern.Match(this.str);
+        if(matcher != Match.Empty)
+        {
+            return matcher.Groups[0].Value;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public int length()
@@ -63,9 +70,11 @@ class CharSeq : CharSequence
         return str[index + pos];
     }
 
-    public CharSequence subSequence(int start, int end)
+    public CharSeq subSequence(int start, int end)
     {
-        return str.subSequence(start + pos, end + pos);
+        //return str.subSequence(start + pos, end + pos);
+        string subStr = str.Substring(start + pos, end - start);
+        return new CharSeq(str);
     }
 }
 

@@ -16,13 +16,13 @@ class Escaper
     private Lexer lexer;
     private StringBuilder buf = new StringBuilder();
 
-    Escaper(String rawStr, Lexer lexer)
+    public Escaper(String rawStr, Lexer lexer)
     {
         this.rawStr = new CharSeq(rawStr);
         this.lexer = lexer;
     }
 
-    String escape()
+    public String escape()
     {
         while (rawStr.length() > 0)
         {
@@ -34,7 +34,7 @@ class Escaper
 
             if (rawStr.length() == 1)
             {
-                return lexer.error("unfinished string");
+                return lexer.error<string>("unfinished string");
             }
 
             switch (rawStr.charAt(1))
@@ -70,12 +70,12 @@ class Escaper
             reportInvalidEscapeSeq();
         }
 
-        return buf.toString();
+        return buf.ToString();
     }
 
     private void reportInvalidEscapeSeq()
     {
-        lexer.error("invalid escape sequence near '\\%c'", rawStr.charAt(1));
+        lexer.error<string>("invalid escape sequence near '\\%c'", rawStr.charAt(1));
     }
 
     // \ddd
@@ -89,17 +89,17 @@ class Escaper
 
         try
         {
-            int d = Integer.parseInt(seq.substring(1));
+            int d = int.Parse(seq.Substring(1));
             if (d <= 0xFF)
             {
-                buf.append((char)d);
-                rawStr.next(seq.length());
+                buf.Append((char)d);
+                rawStr.next(seq.Length);
                 return;
             }
         }
-        catch (NumberFormatException ignored) { }
+        catch (System.Exception ignored) { }
 
-        lexer.error("decimal escape too large near '%s'", seq);
+        lexer.error<string>("decimal escape too large near '%s'", seq);
     }
 
     // \xXX
@@ -111,9 +111,9 @@ class Escaper
             reportInvalidEscapeSeq();
         }
 
-        int d = Integer.parseInt(seq.substring(2), 16);
-        buf.append((char)d);
-        rawStr.next(seq.length());
+        int d = int.Parse(seq.Substring(2), System.Globalization.NumberStyles.HexNumber);
+        buf.Append((char)d);
+        rawStr.next(seq.Length);
     }
 
     // \ u{XXX}
@@ -125,19 +125,21 @@ class Escaper
             reportInvalidEscapeSeq();
         }
 
-        try
-        {
-            int d = Integer.parseInt(seq.substring(3, seq.length() - 1), 16);
-            if (d <= 0x10FFFF)
-            {
-                buf.appendCodePoint(d);
-                rawStr.next(seq.length());
-                return;
-            }
-        }
-        catch (NumberFormatException ignored) { }
+        throw new System.Exception("暂时没想明白如何实现");
+//         try
+//         {
+//             int length = seq.Length - 1 - 3;
+//             int d = int.Parse(seq.Substring(3, length), System.Globalization.NumberStyles.HexNumber);
+//             if (d <= 0x10FFFF)
+//             {
+//                 buf.AppendCodePoint(d);
+//                 rawStr.next(seq.Length);
+//                 return;
+//             }
+//         }
+//         catch (System.Exception ignored) { }
 
-        lexer.error("UTF-8 value too large near '%s'", seq);
+        lexer.error<string>("UTF-8 value too large near '%s'", seq);
     }
 
     private void skipWhitespaces()
