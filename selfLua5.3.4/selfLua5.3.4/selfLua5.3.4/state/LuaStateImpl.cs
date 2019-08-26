@@ -378,8 +378,8 @@ public class LuaStateImpl : LuaState, LuaVM
     public void len(int idx)
     {
         Object val = stack.get(idx);
-        if (val instanceof String) {
-            pushInteger(((String)val).length());
+        if (val is String) {
+            pushInteger(((String)val).Length);
             return;
         }
         Object mm = getMetamethod(val, val, "__len");
@@ -388,11 +388,11 @@ public class LuaStateImpl : LuaState, LuaVM
             stack.push(callMetamethod(val, val, mm));
             return;
         }
-        if (val instanceof LuaTable) {
+        if (val is LuaTable) {
             pushInteger(((LuaTable)val).length());
             return;
         }
-        throw new RuntimeException("length error!"); throw new System.Exception("length error!");
+        throw new System.Exception("length error!"); throw new System.Exception("length error!");
         
     }
 
@@ -425,7 +425,7 @@ public class LuaStateImpl : LuaState, LuaVM
                     continue;
                 }
 
-                throw new RuntimeException("concatenation error!");
+                throw new System.Exception("concatenation error!");
             }
         }
         // n == 1, do nothing
@@ -498,7 +498,7 @@ public class LuaStateImpl : LuaState, LuaVM
 
     private LuaType getTable(Object t, Object k, bool raw)
     {
-        if (t instanceof LuaTable) {
+        if (t is LuaTable) {
             LuaTable tbl = (LuaTable)t;
             Object v = tbl.get(k);
             if (raw || v != null || !tbl.hasMetafield("__index"))
@@ -512,16 +512,16 @@ public class LuaStateImpl : LuaState, LuaVM
             Object mf = getMetafield(t, "__index");
             if (mf != null)
             {
-                if (mf instanceof LuaTable) {
+                if (mf is LuaTable) {
                     return getTable(mf, k, false);
-                } else if (mf instanceof Closure) {
+                } else if (mf is Closure) {
                     Object v = callMetamethod(t, k, mf);
                     stack.push(v);
                     return LuaValue.typeOf(v);
                 }
             }
         }
-        throw new RuntimeException("not a table!"); // todo
+        throw new System.Exception("not a table!"); // todo
     }
 
     /* set functions (stack -> Lua) */
@@ -550,7 +550,7 @@ public class LuaStateImpl : LuaState, LuaVM
 
     private void setTable(Object t, Object k, Object v, bool raw)
     {
-        if (t instanceof LuaTable) {
+        if (t is LuaTable) {
             LuaTable tbl = (LuaTable)t;
             if (raw || tbl.get(k) != null || !tbl.hasMetafield("__newindex"))
             {
@@ -563,11 +563,11 @@ public class LuaStateImpl : LuaState, LuaVM
             Object mf = getMetafield(t, "__newindex");
             if (mf != null)
             {
-                if (mf instanceof LuaTable) {
+                if (mf is LuaTable) {
                     setTable(mf, k, v, false);
                     return;
                 }
-                if (mf instanceof Closure) {
+                if (mf is Closure) {
                     stack.push(mf);
                     stack.push(t);
                     stack.push(k);
@@ -577,7 +577,7 @@ public class LuaStateImpl : LuaState, LuaVM
                 }
             }
         }
-        throw new RuntimeException("not a table!");
+        throw new System.Exception("not a table!");
     }
 
     /* 'load' and 'call' functions */
@@ -598,12 +598,12 @@ public class LuaStateImpl : LuaState, LuaVM
     public void call(int nArgs, int nResults)
     {
         Object val = stack.get(-(nArgs + 1));
-        Object f = val instanceof Closure ? val: null;
+        Object f = val is Closure ? val: null;
 
         if (f == null)
         {
             Object mf = getMetafield(val, "__call");
-            if (mf != null && mf instanceof Closure) {
+            if (mf != null && mf is Closure) {
                 stack.push(f);
                 insert(-(nArgs + 2));
                 nArgs += 1;
@@ -620,12 +620,12 @@ public class LuaStateImpl : LuaState, LuaVM
             }
             else
             {
-                callJavaClosure(nArgs, nResults, c);
+                callCSharpClosure(nArgs, nResults, c);
             }
         }
         else
         {
-            throw new RuntimeException("not function!");
+            throw new System.Exception("not function!");
         }
     }
 
@@ -846,7 +846,7 @@ public class LuaStateImpl : LuaState, LuaVM
 
     private LuaTable getMetatable(Object val)
     {
-        if (val instanceof LuaTable) {
+        if (val is LuaTable) {
             return ((LuaTable)val).metatable;
         }
         String key = "_MT" + LuaValue.typeOf(val);
@@ -856,7 +856,7 @@ public class LuaStateImpl : LuaState, LuaVM
 
     private void setMetatable(Object val, LuaTable mt)
     {
-        if (val instanceof LuaTable) {
+        if (val is LuaTable) {
             ((LuaTable)val).metatable = mt;
             return;
         }
@@ -870,7 +870,7 @@ public class LuaStateImpl : LuaState, LuaVM
         return mt != null ? mt.get(fieldName) : null;
     }
 
-    Object getMetamethod(Object a, Object b, String mmName)
+    public Object getMetamethod(Object a, Object b, String mmName)
     {
         Object mm = getMetafield(a, mmName);
         if (mm == null)
@@ -880,7 +880,7 @@ public class LuaStateImpl : LuaState, LuaVM
         return mm;
     }
 
-    Object callMetamethod(Object a, Object b, Object mm)
+    public Object callMetamethod(Object a, Object b, Object mm)
     {
         //stack.check(4)
         stack.push(mm);
@@ -893,16 +893,16 @@ public class LuaStateImpl : LuaState, LuaVM
     public int rawLen(int idx)
     {
         Object val = stack.get(idx);
-        if (val instanceof String) {
-            return ((String)val).length();
-        } else if (val instanceof LuaTable) {
+        if (val is String) {
+            return ((String)val).Length;
+        } else if (val is LuaTable) {
             return ((LuaTable)val).length();
         } else {
             return 0;
         }
     }
 
-    public boolean rawEqual(int idx1, int idx2)
+    public bool rawEqual(int idx1, int idx2)
     {
         if (!stack.isValid(idx1) || !stack.isValid(idx2))
         {
@@ -927,7 +927,7 @@ public class LuaStateImpl : LuaState, LuaVM
         return getTable(t, i, true);
     }
 
-    public boolean getMetatable(int idx)
+    public bool getMetatable(int idx)
     {
         Object val = stack.get(idx);
         Object mt = getMetatable(val);
@@ -966,10 +966,10 @@ public class LuaStateImpl : LuaState, LuaVM
         {
             setMetatable(val, null);
         }
-        else if (mtVal instanceof LuaTable) {
+        else if (mtVal is LuaTable) {
             setMetatable(val, (LuaTable)mtVal);
         } else {
-            throw new RuntimeException("table expected!"); // todo
+            throw new System.Exception("table expected!"); // todo
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public class LuaTable
 {
-    LuaTable metatable;
+    public LuaTable metatable;
     private List<Object> arr;
     private Dictionary<Object, Object> map;
 
@@ -22,7 +22,7 @@ public class LuaTable
         }
     }
 
-    boolean hasMetafield(String fieldName)
+    public bool hasMetafield(String fieldName)
     {
         return metatable != null && metatable.get(fieldName) != null;
     }

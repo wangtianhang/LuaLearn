@@ -47,7 +47,7 @@ class Arithmetic
     //             null,              // LUA_OPBNOT
     //     };
 
-    private static final String[] metamethods = {
+    private static String[] metamethods = {
             "__add",
             "__sub",
             "__mul",
@@ -117,7 +117,7 @@ class Arithmetic
         throw new Exception("no support type");
     }
 
-    public static Object arith(Object a, Object b, ArithOp op)
+    public static Object arith(Object a, Object b, ArithOp op, LuaStateImpl ls)
     {
         Init();
 
@@ -168,13 +168,13 @@ class Arithmetic
             }
         }
 
-        Object mm = ls.getMetamethod(a, b, metamethods[op.ordinal()]);
+        Object mm = ls.getMetamethod(a, b, metamethods[(int)op]);
         if (mm != null)
         {
             return ls.callMetamethod(a, b, mm);
         }
 
-        throw new RuntimeException("arithmetic error!");
+        throw new System.Exception("arithmetic error!");
     }
 
 }

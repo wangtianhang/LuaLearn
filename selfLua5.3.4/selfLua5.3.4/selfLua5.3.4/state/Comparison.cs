@@ -22,8 +22,8 @@ class Comparison
             return a.Equals(b) ||
                     (b is long && a.Equals((double)((long)b)));
         }
-        else if (a instanceof LuaTable) {
-            if (b instanceof LuaTable && a != b && ls != null) {
+        else if (a is LuaTable) {
+            if (b is LuaTable && a != b && ls != null) {
                 Object mm = ls.getMetamethod(a, b, "__eq");
                 if (mm != null)
                 {

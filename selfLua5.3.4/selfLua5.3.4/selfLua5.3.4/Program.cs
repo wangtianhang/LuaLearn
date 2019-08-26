@@ -166,8 +166,8 @@ class Program
         byte[] data = File.ReadAllBytes(@".\closure_test.luac.out");
         LuaState ls = new LuaStateImpl();
         ls.register("print", print);
-        ls.register("getmetatable", Main::getMetatable);
-        ls.register("setmetatable", Main::setMetatable);
+        ls.register("getmetatable", getMetatable);
+        ls.register("setmetatable", setMetatable);
         ls.load(data, "gaga", "b");
         ls.call(0, 0);
     }
