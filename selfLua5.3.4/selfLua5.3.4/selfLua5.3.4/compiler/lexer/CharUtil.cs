@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 class CharUtil
 {
-    static bool isWhiteSpace(char c)
+    public static bool isWhiteSpace(char c)
     {
         switch (c)
         {
@@ -22,7 +22,7 @@ class CharUtil
         return false;
     }
 
-    static bool isNewLine(char c)
+    public static bool isNewLine(char c)
     {
         return c == '\r' || c == '\n';
     }
