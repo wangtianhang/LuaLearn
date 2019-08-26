@@ -54,6 +54,9 @@
     <Compile Include="binchunk\LocVar.cs" />
     <Compile Include="binchunk\Prototype.cs" />
     <Compile Include="binchunk\Upvalue.cs" />
+    <Compile Include="compiler\lexer\CharUtil.cs" />
+    <Compile Include="compiler\lexer\Token.cs" />
+    <Compile Include="compiler\lexer\TokenKind.cs" />
     <Compile Include="number\LuaMath.cs" />
     <Compile Include="number\LuaNumber.cs" />
     <Compile Include="state\Arithmetic.cs" />
