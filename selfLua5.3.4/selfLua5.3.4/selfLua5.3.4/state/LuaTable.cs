@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public class LuaTable
 {
-
+    LuaTable metatable;
     private List<Object> arr;
     private Dictionary<Object, Object> map;
 
@@ -20,6 +20,11 @@ public class LuaTable
         {
             map = new Dictionary<Object, Object>(nRec);
         }
+    }
+
+    boolean hasMetafield(String fieldName)
+    {
+        return metatable != null && metatable.get(fieldName) != null;
     }
 
     public int length()

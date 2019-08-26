@@ -161,6 +161,17 @@ class Program
         ls.call(0, 0);
     }
 
+    static void TestChapter11()
+    {
+        byte[] data = File.ReadAllBytes(@".\closure_test.luac.out");
+        LuaState ls = new LuaStateImpl();
+        ls.register("print", print);
+        ls.register("getmetatable", Main::getMetatable);
+        ls.register("setmetatable", Main::setMetatable);
+        ls.load(data, "gaga", "b");
+        ls.call(0, 0);
+    }
+
     private static int print(LuaState ls)
     {
         int nArgs = ls.getTop();
@@ -190,6 +201,21 @@ class Program
         //System.out.println();
         Console.WriteLine();
         return 0;
+    }
+
+    private static int getMetatable(LuaState ls)
+    {
+        if (!ls.getMetatable(1))
+        {
+            ls.pushNil();
+        }
+        return 1;
+    }
+
+    private static int setMetatable(LuaState ls)
+    {
+        ls.setMetatable(1);
+        return 1;
     }
 }
 //}

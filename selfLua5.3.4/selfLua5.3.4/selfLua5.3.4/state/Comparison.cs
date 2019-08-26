@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 class Comparison
 {
 
-    public static bool eq(Object a, Object b)
+    public static bool eq(Object a, Object b, LuaStateImpl ls)
     {
         if (a == null)
         {
@@ -21,12 +21,23 @@ class Comparison
         } else if (a is Double) {
             return a.Equals(b) ||
                     (b is long && a.Equals((double)((long)b)));
-        } else {
+        }
+        else if (a instanceof LuaTable) {
+            if (b instanceof LuaTable && a != b && ls != null) {
+                Object mm = ls.getMetamethod(a, b, "__eq");
+                if (mm != null)
+                {
+                    return LuaValue.toBoolean(ls.callMetamethod(a, b, mm));
+                }
+            }
+            return a == b;
+        }
+        else {
             return a == b;
         }
     }
 
-    public static bool lt(Object a, Object b)
+    public static bool lt(Object a, Object b, LuaStateImpl ls)
     {
         if (a is String && b is String) {
             return ((String)a).CompareTo((String)b) < 0;
@@ -45,10 +56,15 @@ class Comparison
                 return ((Double)a) < (double)((long)b);
             }
         }
+        Object mm = ls.getMetamethod(a, b, "__lt");
+        if (mm != null)
+        {
+            return LuaValue.toBoolean(ls.callMetamethod(a, b, mm));
+        }
         throw new System.Exception("comparison error!");
     }
 
-    public static bool le(Object a, Object b)
+    public static bool le(Object a, Object b, LuaStateImpl ls)
     {
         if (a is String && b is String) {
             return ((String)a).CompareTo((String)b) <= 0;
@@ -66,6 +82,16 @@ class Comparison
             } else if (b is long) {
                 return ((Double)a) <= (double)((long)b);
             }
+        }
+        Object mm = ls.getMetamethod(a, b, "__le");
+        if (mm != null)
+        {
+            return LuaValue.toBoolean(ls.callMetamethod(a, b, mm));
+        }
+        mm = ls.getMetamethod(b, a, "__lt");
+        if (mm != null)
+        {
+            return LuaValue.toBoolean(ls.callMetamethod(b, a, mm));
         }
         throw new System.Exception("comparison error!");
     }

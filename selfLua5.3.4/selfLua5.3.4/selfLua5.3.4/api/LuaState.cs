@@ -77,5 +77,13 @@ public interface LuaState
     void pushGlobalTable();
     LuaType getGlobal(String name);
     void setGlobal(String name);
-    
+
+    int rawLen(int idx);
+    bool rawEqual(int idx1, int idx2);
+    LuaType rawGet(int idx);
+    LuaType rawGetI(int idx, long i);
+    bool getMetatable(int idx);
+    void rawSet(int idx);
+    void rawSetI(int idx, long i);
+    void setMetatable(int idx);
 }
