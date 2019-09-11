@@ -203,10 +203,10 @@
     <ClCompile Include="ltable.c" />
     <ClCompile Include="ltablib.c" />
     <ClCompile Include="ltm.c" />
-    <ClCompile Include="lua.c" />
     <ClCompile Include="lundump.c" />
     <ClCompile Include="lvm.c" />
     <ClCompile Include="lzio.c" />
+    <ClCompile Include="main.c" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

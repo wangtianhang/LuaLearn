@@ -146,9 +146,6 @@
     <ClCompile Include="ltm.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="lua.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="lundump.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -183,6 +180,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ldump.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
