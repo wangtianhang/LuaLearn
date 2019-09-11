@@ -3,26 +3,43 @@
 #include "lauxlib.h"
 #include "lualib.h"
 
-static int LogTable(lua_State *L)
+void RecurrenceLogTable(lua_State *L)
 {
 	if (lua_istable(L, -1))
 	{
-		int tableIndex = lua_gettop(L);
-		printf("tableIndex %d \n", tableIndex);
+		//int tableIndex = lua_gettop(L);
+		//printf("tableIndex %d \n", tableIndex);
 		// push the first key
 		//lua_pushnil(L);
 		lua_pushnil(L);
-		while (lua_next(L, -2)) 
+		while (lua_next(L, -2))
 		{
 			/* 此时栈上 -1 处为 value, -2 处为 key */
-			const char * keyStr = lua_tostring(L, -2);
-			const char * valueStr = lua_tostring(L, -1);
-			printf("%s %s\n", keyStr, valueStr);
-			lua_pop(L, 1);
+			if (lua_istable(L, -1))
+			{
+				const char * keyStr = lua_tostring(L, -2);
+				printf("子table %s 开始\n", keyStr);
+				RecurrenceLogTable(L);
+				printf("子table %s 结束\n", keyStr);
+				lua_pop(L, 1);
+			}
+			else
+			{
+				const char * keyStr = lua_tostring(L, -2);
+				const char * valueStr = lua_tostring(L, -1);
+				printf("%s %s\n", keyStr, valueStr);
+				lua_pop(L, 1);
+			}
 		}
 	}
+}
+
+static int LogTable(lua_State *L)
+{
+	RecurrenceLogTable(L);
 	return 0;
 }
+
 
 static const luaL_Reg helperlib[] = {
   {"LogTable",   LogTable},
