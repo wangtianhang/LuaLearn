@@ -4,4 +4,8 @@
     <LocalDebuggerCommandArguments>E:\gitHub\luaLearn\LuaLearn\experiment5.1.5\lua5.1.5\lua5.1.5\test.lua</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerCommandArguments>.\test.lua</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>
