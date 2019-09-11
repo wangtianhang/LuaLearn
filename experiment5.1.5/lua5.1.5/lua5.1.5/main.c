@@ -7,7 +7,8 @@ static int LogTable(lua_State *L)
 {
 	if (lua_istable(L, -1))
 	{
-		//int tableIndex = lua_gettop(L);
+		int tableIndex = lua_gettop(L);
+		printf("tableIndex %d \n", tableIndex);
 		// push the first key
 		//lua_pushnil(L);
 		lua_pushnil(L);
