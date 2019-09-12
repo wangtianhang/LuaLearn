@@ -1,7 +1,7 @@
 
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
+#include "./src/lua.h"
+#include "./src/lauxlib.h"
+#include "./src/lualib.h"
 
 void RecurrenceLogTable(lua_State *L)
 {
@@ -66,3 +66,4 @@ int main(int argc, char **argv)
 	lua_close(L);
 	return 0;
 }
+
