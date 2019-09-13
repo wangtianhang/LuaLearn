@@ -36,9 +36,15 @@ class Program
         LuaDLL.luaL_openlibs(L);  /* open libraries */
         //RegisterHelperLib(L);
         LuaDLL.lua_register(L, "print2", luaPrint);
-        LuaDLL.luaL_dofile(L, args[0]);
+        string fullPath = Path.GetFullPath(args[0]);
+        bool ret = LuaDLL.luaL_dofile(L, fullPath);
+        if(!ret)
+        {
+            Console.WriteLine("执行luaL_dofile出错");
+        }
         LuaDLL.lua_close(L);
 
+        Console.WriteLine("测试结束");
         Console.ReadLine();
         return;
     }
