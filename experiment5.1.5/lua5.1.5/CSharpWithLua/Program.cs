@@ -42,6 +42,10 @@ class Program
         {
             Console.WriteLine("执行luaL_dofile出错");
         }
+        else
+        {
+            Console.WriteLine("执行luaL_dofile成功");
+        }
         LuaDLL.lua_close(L);
 
         Console.WriteLine("测试结束");
