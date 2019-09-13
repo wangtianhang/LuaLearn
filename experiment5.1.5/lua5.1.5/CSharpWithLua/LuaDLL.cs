@@ -6,9 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 
+public class LuaIndexes
+{
+    public static int LUA_REGISTRYINDEX = -10000;
+    public static int LUA_ENVIRONINDEX = -10001;
+    public static int LUA_GLOBALSINDEX = -10002;
+}
+
 class LuaDLL
 {
-    public const string LUADLL = "lua5.1.5";
+    public const string LUADLL = "lua5.1.5.dll";
     public static int LUA_MULTRET = -1;
 
     [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
@@ -43,10 +50,41 @@ class LuaDLL
     [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
     public static extern int lua_pcall(IntPtr luaState, int nArgs, int nResults, int errfunc);
 
-//     public static void luaL_register(IntPtr luaState, string name, LuaCSFunction func)
-//     {
-//         lua_pushcfunction(luaState, func);
-//         lua_setglobal(luaState, name);
-//     }
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate int LuaCSFunction(IntPtr luaState);
+
+    public static void lua_register(IntPtr luaState, string name, LuaCSFunction func)
+    {
+         lua_pushcfunction(luaState, func);
+         lua_setglobal(luaState, name);
+    }
+
+    public static void lua_setglobal(IntPtr luaState, string name)
+    {
+        lua_setfield(luaState, LuaIndexes.LUA_GLOBALSINDEX, name);
+    }
+
+    //     public static void lua_setfield(IntPtr L, int idx, string key)
+    //     {
+    //         if (tolua_setfield(L, idx, key) != 0)
+    //         {
+    //             string error = LuaDLL.lua_tostring(L, -1);
+    //             throw new System.Exception(error);
+    //         }
+    //     }
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void lua_setfield(IntPtr L, int idx, string key);
+
+    public static void lua_pushcfunction(IntPtr luaState, LuaCSFunction func)
+    {
+        IntPtr fn = Marshal.GetFunctionPointerForDelegate(func);
+        lua_pushcclosure(luaState, fn, 0);
+    }
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void lua_pushcclosure(IntPtr luaState, IntPtr fn, int n);
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern int lua_gettop(IntPtr luaState);
 }
 

@@ -1,4 +1,4 @@
-print('hello lua')
+print2('hello lua')
 
 test = {}
 test.a = 1
