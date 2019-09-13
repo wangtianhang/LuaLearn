@@ -55,8 +55,8 @@ class LuaDLL
 
     public static void lua_register(IntPtr luaState, string name, LuaCSFunction func)
     {
-         lua_pushcfunction(luaState, func);
-         lua_setglobal(luaState, name);
+        lua_pushcfunction(luaState, func);
+        lua_setglobal(luaState, name);
     }
 
     public static void lua_setglobal(IntPtr luaState, string name)
@@ -86,5 +86,36 @@ class LuaDLL
 
     [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
     public static extern int lua_gettop(IntPtr luaState);
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern int lua_isstring(IntPtr luaState, int index);
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr lua_tolstring(IntPtr luaState, int index, out int strLen);
+
+    public static string lua_ptrtostring(IntPtr str, int len)
+    {
+        string ss = Marshal.PtrToStringAnsi(str, len);
+
+        if (ss == null)
+        {
+            byte[] buffer = new byte[len];
+            Marshal.Copy(str, buffer, 0, len);
+            return Encoding.UTF8.GetString(buffer);
+        }
+
+        return ss;
+    }
+
+    public static string lua_tostring(IntPtr luaState, int index)
+    {
+        int len = 0;
+        IntPtr str = lua_tolstring(luaState, index, out len);
+        if(str != IntPtr.Zero)
+        {
+            return lua_ptrtostring(str, len);
+        }
+        return null;
+    }
 }
 

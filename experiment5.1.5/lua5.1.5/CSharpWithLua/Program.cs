@@ -13,6 +13,24 @@ class Program
         try
         {
             int n = LuaDLL.lua_gettop(L);
+            Console.WriteLine("n " + n);
+
+            StringBuilder sb = new StringBuilder();
+            for(int i = 1; i <= n; ++i)
+            {
+                if (i > 1) sb.Append("    ");
+
+                if(LuaDLL.lua_isstring(L, i) == 1)
+                {
+                    sb.Append(LuaDLL.lua_tostring(L, i));
+                }
+                else
+                {
+                    Console.WriteLine("暂不支持的Print类型");
+                }
+            }
+
+            Console.WriteLine(sb.ToString());
 
             return 0;
         }
@@ -35,7 +53,7 @@ class Program
         }
         LuaDLL.luaL_openlibs(L);  /* open libraries */
         //RegisterHelperLib(L);
-        LuaDLL.lua_register(L, "print2", luaPrint);
+        LuaDLL.lua_register(L, "print", luaPrint);
         string fullPath = Path.GetFullPath(args[0]);
         bool ret = LuaDLL.luaL_dofile(L, fullPath);
         if(!ret)
