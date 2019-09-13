@@ -8,9 +8,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua5.1.5lib", "lua5.1.5lib\lua5.1.5lib.vcxproj", "{B4948F1A-0F2D-41EE-87D9-4F9F1662A0F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpWithLua", "CSharpWithLua\CSharpWithLua.csproj", "{94D73B59-7CD5-40DF-A869-1D9055CDF6A7}"
-	ProjectSection(ProjectDependencies) = postProject
-		{B4948F1A-0F2D-41EE-87D9-4F9F1662A0F4} = {B4948F1A-0F2D-41EE-87D9-4F9F1662A0F4}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.IO;
 
 class Program
 {
     static void Main(string[] args)
     {
+        Console.WriteLine(Directory.GetCurrentDirectory());
+
         IntPtr L = LuaDLL.lua_open();  /* create state */
         if (L == IntPtr.Zero)
         {
@@ -16,7 +18,7 @@ class Program
             return;
         }
         LuaDLL.luaL_openlibs(L);  /* open libraries */
-        RegisterHelperLib(L);
+        //RegisterHelperLib(L);
         LuaDLL.luaL_dofile(L, args[1]);
         LuaDLL.lua_close(L);
         return;
