@@ -13,10 +13,26 @@ public class LuaIndexes
     public static int LUA_GLOBALSINDEX = -10002;
 }
 
+public enum LuaTypes
+{
+    LUA_TNONE = -1,
+    LUA_TNIL = 0,
+    LUA_TBOOLEAN = 1,
+    LUA_TLIGHTUSERDATA = 2,
+    LUA_TNUMBER = 3,
+    LUA_TSTRING = 4,
+    LUA_TTABLE = 5,
+    LUA_TFUNCTION = 6,
+    LUA_TUSERDATA = 7,
+    LUA_TTHREAD = 8,
+
+}
+
 class LuaDLL
 {
     public const string LUADLL = "lua5.1.5.dll";
     public static int LUA_MULTRET = -1;
+    public static string[] LuaTypeName = { "none", "nil", "boolean", "lightuserdata", "number", "string", "table", "function", "userdata", "thread" };
 
     [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr luaL_newstate();
@@ -117,5 +133,55 @@ class LuaDLL
         }
         return null;
     }
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern LuaTypes lua_type(IntPtr luaState, int index);
+
+    public static bool lua_isnil(IntPtr luaState, int n)
+    {
+        return (lua_type(luaState, n) == LuaTypes.LUA_TNIL);
+    }
+
+    public static bool lua_isboolean(IntPtr luaState, int n)
+    {
+        LuaTypes type = lua_type(luaState, n);
+        return type == LuaTypes.LUA_TBOOLEAN || type == LuaTypes.LUA_TNIL;
+    }
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern int lua_toboolean(IntPtr luaState, int index);
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr lua_topointer(IntPtr L, int idx);
+
+    public static string luaL_typename(IntPtr luaState, int stackPos)
+    {
+        LuaTypes type = LuaDLL.lua_type(luaState, stackPos);
+        return lua_typename(luaState, type);
+    }
+
+    public static string lua_typename(IntPtr luaState, LuaTypes type)
+    {
+        int t = (int)type;
+        return LuaTypeName[t + 1];
+    }
+
+    public static bool lua_istable(IntPtr luaState, int n)
+    {
+        return lua_type(luaState, n) == LuaTypes.LUA_TTABLE;
+    }
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void lua_pushnil(IntPtr luaState);
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void lua_settop(IntPtr luaState, int top);
+
+    public static void lua_pop(IntPtr luaState, int amount)
+    {
+        LuaDLL.lua_settop(luaState, -(amount) - 1);
+    }
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern int lua_next(IntPtr luaState, int index);
 }
 
