@@ -62,6 +62,7 @@ int main(int argc, char **argv)
 	}
 	luaL_openlibs(L);  /* open libraries */
 	RegisterHelperLib(L);
+	lua_register(L, "LogTable2", LogTable);
 	luaL_dofile(L, argv[1]);
 	lua_close(L);
 	return 0;
