@@ -194,5 +194,8 @@ class LuaDLL
 
     [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
     public static extern int luaL_ref(IntPtr L, int t);
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void lua_rawgeti(IntPtr luaState, int idx, int n);
 }
 
