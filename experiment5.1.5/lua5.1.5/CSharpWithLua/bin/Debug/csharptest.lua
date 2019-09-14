@@ -13,7 +13,7 @@ print(test)
 
 LogTable2(test)
 
-function test()
+function TestCSharpCallLua()
 	print("call lua test");
 end
 

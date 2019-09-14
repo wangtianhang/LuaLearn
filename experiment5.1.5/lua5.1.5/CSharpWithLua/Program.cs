@@ -121,7 +121,7 @@ class Program
         }
 
         LuaState state = new LuaState(L);
-        LuaFunction func = state.GetFunction("test");
+        LuaFunction func = state.GetFunction("TestCSharpCallLua");
         func.Call();
 
         LuaDLL.lua_close(L);
