@@ -119,6 +119,11 @@ class Program
         {
             Console.WriteLine("执行luaL_dofile成功");
         }
+
+        LuaState state = new LuaState(L);
+        LuaFunction func = state.GetFunction("test");
+        func.Call();
+
         LuaDLL.lua_close(L);
 
         Console.WriteLine("测试结束");

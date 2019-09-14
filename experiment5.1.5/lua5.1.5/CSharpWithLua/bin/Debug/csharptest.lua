@@ -13,6 +13,10 @@ print(test)
 
 LogTable2(test)
 
+function test()
+	print("call lua test");
+end
+
 --Helper.LogTable(test)
 
 --Helper.LogTable(test)

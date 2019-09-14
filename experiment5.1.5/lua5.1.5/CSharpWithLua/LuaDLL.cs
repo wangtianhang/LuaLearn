@@ -183,5 +183,16 @@ class LuaDLL
 
     [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
     public static extern int lua_next(IntPtr luaState, int index);
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void lua_getfield(IntPtr L, int idx, string key);
+
+    public static void lua_getglobal(IntPtr luaState, string name)
+    {
+        lua_getfield(luaState, LuaIndexes.LUA_GLOBALSINDEX, name);
+    }
+
+    [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
+    public static extern int luaL_ref(IntPtr L, int t);
 }
 
